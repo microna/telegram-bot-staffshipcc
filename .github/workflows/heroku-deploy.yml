@@ -10,11 +10,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    inputs:
-      heroku_api_key:
-        description: 'Heroku API Key'
-        required: true
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -44,4 +39,4 @@ jobs:
             heroku pipelines:promote -a staffshipcc-development-bot
           fi
         env:
-          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
