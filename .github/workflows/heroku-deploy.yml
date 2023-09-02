@@ -1,0 +1,38 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18 
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Lint
+        run: npm run lint 
+
+      - name: Deploy to Heroku
+        run: |
+          if [ $GITHUB_REF == 'refs/heads/main' ]; then
+            heroku login -i
+            heroku pipelines:promote -a staffshipcc-bot
+          elif [ $GITHUB_REF == 'refs/heads/dev' ]; then
+            heroku login -i
+            heroku pipelines:promote -a staffshipcc-development-bot
+          fi
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
