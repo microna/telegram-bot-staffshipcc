@@ -40,6 +40,8 @@ jobs:
             heroku pipelines:promote -a staffshipcc-bot-prod
           elif [ $GITHUB_REF == 'refs/heads/dev' ]; then
             heroku pipelines:promote -a staffshipcc-development-bot
+          elif [ $GITHUB_REF == 'refs/heads/staging' ]; then
+            heroku pipelines:promote -a staffshipcc-staging-bot
           fi
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
