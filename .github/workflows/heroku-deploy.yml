@@ -29,12 +29,12 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Login to Heroku
+      - name: Set Heroku Config
         run: |
-          echo $HEROKU_API_KEY | heroku login -i
-          
-      - name: Debug GITHUB_REF 
-        run: echo "GITHUB_REF is $GITHUB_REF"
+          echo "machine api.heroku.com" >> ~/.netrc
+          echo "  login $HEROKU_EMAIL" >> ~/.netrc
+          echo "  password $HEROKU_API_KEY" >> ~/.netrc
+          chmod 600 ~/.netrc
 
       - name: Deploy to Heroku
         run: |
@@ -47,3 +47,4 @@ jobs:
           fi
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_EMAIL: kievonfire@gmail.com
