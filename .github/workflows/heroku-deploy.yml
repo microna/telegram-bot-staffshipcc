@@ -31,20 +31,16 @@ jobs:
 
       - name: Set Heroku Config
         run: |
-          echo "machine api.heroku.com" >> ~/.netrc
-          echo "  login $HEROKU_EMAIL" >> ~/.netrc
-          echo "  password $HEROKU_API_KEY" >> ~/.netrc
+          echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
           chmod 600 ~/.netrc
 
       - name: Deploy to Heroku
         run: |
           if [ $GITHUB_REF == 'refs/heads/main' ]; then
-            heroku login
             heroku pipelines:promote -a staffshipcc-bot-prod
           elif [ $GITHUB_REF == 'refs/heads/dev' ]; then
-            heroku login
             heroku pipelines:promote -a staffshipcc-development-bot
           fi
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: kievonfire@gmail.com
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
