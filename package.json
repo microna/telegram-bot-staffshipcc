@@ -1,0 +1,25 @@
+{
+  "name": "telegram-bot-staffshipcc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microna/telegram-bot-staffshipcc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/microna/telegram-bot-staffshipcc/issues"
+  },
+  "homepage": "https://github.com/microna/telegram-bot-staffshipcc#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "eslint": "^8.48.0",
+    "node-telegram-bot-api": "^0.61.0",
+    "nodemon": "^3.0.1"
+  }
+}
