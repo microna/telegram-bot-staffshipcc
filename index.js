@@ -6,13 +6,16 @@ const TelegramBot = require('node-telegram-bot-api');
 
 const PORT = process.env.PORT || 4444;
 
-const token = 'YOUR_TELEGRAM_BOT_TOKEN';
+const token = process.env.TELEGRAM_BOT_TOKEN;
 
 app.use(cors());
 app.use(express.json());
 const bot = new TelegramBot(token, { polling: true });
 
 require('./Controllers/BotController')(app, bot);
+
+
+
 
 app.get('/', (req, res) => {
   console.log(req.body);
@@ -31,3 +34,5 @@ app.post('/test', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });
+
+
