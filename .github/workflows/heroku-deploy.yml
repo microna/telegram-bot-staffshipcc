@@ -32,12 +32,15 @@ jobs:
       - name: Login to Heroku
         run: |
           echo $HEROKU_API_KEY | heroku login -i
+          
+      - name: Debug GITHUB_REF 
+        run: echo "GITHUB_REF is $GITHUB_REF"
 
       - name: Deploy to Heroku
         run: |
           if [ $GITHUB_REF == 'refs/heads/main' ]; then
             heroku login
-            heroku pipelines:promote -a staffshipcc-bot
+            heroku pipelines:promote -a staffshipcc-bot-prod
           elif [ $GITHUB_REF == 'refs/heads/dev' ]; then
             heroku login
             heroku pipelines:promote -a staffshipcc-development-bot
