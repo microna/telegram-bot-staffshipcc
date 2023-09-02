@@ -8,23 +8,13 @@ const PORT = process.env.PORT || 4444;
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
-
-console.log('adevkatne')
 app.use(cors());
 app.use(express.json());
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
 require('./Controllers/BotController')(app, bot);
 
-console.log('heroku deploy test');
 app.get('/', (req, res) => {
-  console.log(req.body);
-  res.json({
-    hello: 'hi!',
-  });
-});
-
-app.post('/test', (req, res) => {
   console.log(req.body);
   res.json({
     hello: 'hi!',
@@ -34,4 +24,3 @@ app.post('/test', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });
-
