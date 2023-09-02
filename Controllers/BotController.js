@@ -14,12 +14,17 @@ module.exports = (app, bot) => {
     bot.sendMessage(chatId, resp);
   });
 
+
+
   // Listen for any kind of message. There are different kinds of
   // messages.
   bot.on('message', (msg) => {
     const chatId = msg.chat.id;
 
+
+    
+
     // send a message to the chat acknowledging receipt of their message
-    bot.sendMessage(chatId, 'Received your message');
+    bot.sendMessage(chatId, 'ти по понятиям пес, понял?');
   });
 };

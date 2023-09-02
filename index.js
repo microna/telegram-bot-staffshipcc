@@ -8,6 +8,8 @@ const PORT = process.env.PORT || 4444;
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 
+
+console.log('adevkatne')
 app.use(cors());
 app.use(express.json());
 const bot = new TelegramBot(token, { polling: true });
@@ -32,5 +34,4 @@ app.post('/test', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });
-
 
