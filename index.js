@@ -14,9 +14,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 require('./Controllers/BotController')(app, bot);
 
-
-
-
+console.log('heroku deploy test');
 app.get('/', (req, res) => {
   console.log(req.body);
   res.json({
