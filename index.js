@@ -20,10 +20,9 @@ app.use(cors());
 app.use(express.json());
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./Controllers/BotController')(app, bot);
+require('./src/Controllers/BotController')(app, bot);
 
 app.get('/', (req, res) => {
-  console.log(req.body);
   res.json({
     hello: 'Dev!',
   });
