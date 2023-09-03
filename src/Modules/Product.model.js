@@ -21,8 +21,11 @@ const nameObjectSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema(
   {
     clientId: {
-      type: String,
+      type: Number,
       required: true,
+    },
+    clientUserName: {
+      type: String,
     },
     trackNumber: {
       type: String,
@@ -30,6 +33,9 @@ const productSchema = new mongoose.Schema(
     name: [nameObjectSchema],
     totalAmount: {
       type: Number,
+    },
+    status: {
+      type: String,
     },
   },
   {

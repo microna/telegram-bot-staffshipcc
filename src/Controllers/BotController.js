@@ -1,7 +1,12 @@
-const { saveProduct } = require('../Storages/ProductStorage');
+const { saveProduct, updateProductStatus } = require('../Storages/ProductStorage');
 const { saveUser } = require('../Storages/UserStorage');
 
 module.exports = (app, bot) => {
+  const Status = {
+    OnReview: 'On review',
+    Finalize: 'Finalize',
+    Reject: 'Reject',
+  };
   const adminId = process.env.ADMIN_ID;
   // Matches "/echo [whatever]"
   bot.onText(/\/start/, async (msg, match) => {
@@ -21,14 +26,15 @@ module.exports = (app, bot) => {
   // messages.
   bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
+    const { from } = msg;
     console.log(msg.from.id, msg.from.username);
     // send a message to the chat acknowledging receipt of their message
     await bot.sendMessage(chatId, 'хай');
     await bot.sendMessage(adminId, `Юзер ${msg.from.username} написав тобі месагу: ${msg.text}`);
     if (msg.text === 'save product') {
-      const { from } = msg;
       const result = await saveProduct({
         clientId: from.id,
+        clientUserName: from.username,
         trackNumber: 'NP000000000000000NPG',
         name: {
           productName: 'Apple iPad 6th Gen 32G',
@@ -37,6 +43,7 @@ module.exports = (app, bot) => {
           link: 'https://www.ebay.com/itm/Apple-iPad-6th-Gen-32GB-Space-Gray-Wi-Fi-MR7F2LL-A/123135018732?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2057872.m2749.l2649',
         },
         totalAmount: 2062,
+        status: Status.OnReview,
       });
 
       if (result) {
@@ -46,7 +53,6 @@ module.exports = (app, bot) => {
       }
     }
     if (msg.text === 'save user') {
-      const { from } = msg;
       const result = await saveUser({
         userId: from.id,
         isBot: from.is_bot,
@@ -60,6 +66,18 @@ module.exports = (app, bot) => {
         await bot.sendMessage(adminId, `User успішно доданий до БД!`);
       } else {
         await bot.sendMessage(adminId, `Помилка сейву до БД!`);
+      }
+    }
+    if (msg.text === 'update status') {
+      const result = await updateProductStatus({
+        clientId: from.id,
+        trackNumber: 'NP000000000000000NPG',
+        status: Status.Finalize,
+      });
+      if (result) {
+        await bot.sendMessage(adminId, `Status посилки успішно змінений у БД!`);
+      } else {
+        await bot.sendMessage(adminId, `Помилка зміни статусу у БД!`);
       }
     }
   });
