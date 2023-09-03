@@ -1,3 +1,22 @@
+const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+  id: {
+    type: String,
+  },
+  trackNumber: {
+    type: String,
+  },
+  name: {
+    type: Array,
+  },
+  totalAmount: {
+    type: Number,
+  },
+});
+
+module.exports = mongoose.model('product', productSchema);
+
 // import mongoose from "mongoose";
 
 // const UserScheme = new mongoose.Schema({

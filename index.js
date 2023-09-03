@@ -3,6 +3,14 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
+const mongoose = require('mongoose');
+
+mongoose
+  .connect(process.env.DB_URL)
+  .then(() => {
+    console.log('Connected to MongoDB 🔥');
+  })
+  .catch((err) => console.log('db connection error: ', err));
 
 const PORT = process.env.PORT || 4444;
 

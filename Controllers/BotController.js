@@ -1,4 +1,4 @@
-//TODO
+const Product = require('../Modules/Product.model.js');
 
 module.exports = (app, bot) => {
   const admin = process.env.ADMIN_ID;
@@ -25,6 +25,20 @@ module.exports = (app, bot) => {
       // send a message to the chat acknowledging receipt of their message
       await bot.sendMessage(chatId, 'хай');
       await bot.sendMessage(admin, `Юзер ${msg.from.username} написав тобі месагу: ${msg.text}`);
+      if (msg.text === 'db') {
+        let newProduct = {
+          id: '1',
+          trackNumber: '456786567',
+          name: ['apple', 'macbook'],
+          totalAmount: 34567876,
+        };
+        const result = await new Product(newProduct).save();
+        if (result) {
+          console.log('data saved');
+        } else {
+          console.log('error save');
+        }
+      }
     } catch (error) {
       console.log(error);
     }
