@@ -12,7 +12,7 @@ module.exports = (app, bot) => {
     }
 
     if (msg.text === '/help') {
-      await bot.sendMessage(msg.chat.id, `Связаться с администрацией`);
+      await bot.sendMessage(msg.chat.id, `TODO Связаться с администрацией`);
     }
   });
 };

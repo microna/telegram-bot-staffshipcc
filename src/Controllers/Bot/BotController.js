@@ -14,7 +14,10 @@ module.exports = (app, bot) => {
 
   bot.onText(/\/start/, async (msg) => {
     try {
-      await bot.sendMessage(msg.chat.id, `Вы запустили бота! TODO text...`);
+      await bot.sendMessage(
+        msg.chat.id,
+        `Вы запустили бота! \n Нажмите на кнопку menu что бы начать работу с ботом \n TODO text...`,
+      );
     } catch (error) {
       console.log('error');
     }

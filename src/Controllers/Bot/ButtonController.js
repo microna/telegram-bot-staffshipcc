@@ -1,24 +1,22 @@
+const { mainButtons } = require("../../Components/Buttons");
+
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
   bot.on('text', async (msg) => {
     const { chat, message_id, text } = msg;
     if (text.startsWith('Отримувач - ') && text.toString().toLowerCase().includes('+380')) {
       // Уведомьте клиента, что сообщение отправлено администратору
-      await bot.sendMessage(chat.id, 'Ваше сообщение отправлено администратору.');
+      await bot.sendMessage(chat.id, 'Ваше сообщение отправлено администратору.', {
+        reply_markup: {
+          keyboard: [['Редактировать посилку', 'На главную']],
+          resize_keyboard: true,
+        },
+      });
 
       // Перешлите сообщение администратору
       await bot.forwardMessage(adminId, chat.id, message_id);
     }
-    if (msg.text === 'Додати посилку') {
-      await bot.sendMessage(
-        chat.id,
-        `
-        Вам нужно оформить посылку в таком формате:`,
-        {
-          parse_mode: 'HTML',
-        },
-      );
-
+    if (msg.text === 'Додати посилку' || msg.text === 'Редактировать посилку') {
       await bot.sendMessage(
         chat.id,
         `
@@ -31,12 +29,7 @@ module.exports = (app, bot) => {
         
         New Balance 1906R - 110 євро - 4 пари
         https://www.jdsports.de/product/grau-new-balance-1906r-damen/19286423_jdsportsde/`,
-        {
-          parse_mode: 'HTML',
-          reply_markup: {
-            remove_keyboard: true,
-          },
-        },
+        {},
       );
     }
     if (msg.text === 'Тарифы') {
@@ -63,6 +56,14 @@ module.exports = (app, bot) => {
       await bot.sendMessage(chat.id, 'Меню закрыто', {
         reply_markup: {
           remove_keyboard: true,
+        },
+      });
+    }
+    if (msg.text == 'На главную') {
+      await bot.sendMessage(chat.id, 'На главную', {
+        reply_markup: {
+          keyboard: mainButtons,
+          resize_keyboard: true,
         },
       });
     }
