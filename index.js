@@ -20,7 +20,11 @@ app.use(cors());
 app.use(express.json());
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./src/Controllers/BotController')(app, bot);
+require('./src/Controllers/Bot/BotController')(app, bot);
+require('./src/Controllers/Bot/MenuController')(app, bot);
+require('./src/Controllers/Bot/UserController')(app, bot);
+require('./src/Controllers/Bot/AdminController')(app, bot);
+require('./src/Controllers/Bot/ButtonController')(app, bot);
 
 app.get('/', (req, res) => {
   res.json({
