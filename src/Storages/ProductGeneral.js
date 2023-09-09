@@ -33,7 +33,7 @@ const updateProductGeneral = async ({ id, status }) => {
 const getProductsGeneralByStatus = async ({ status }) => {
   try {
     const products = await ProductGeneralModel.find({ status });
-    return products;
+    return products.sort((a, b) => a.updatedAt - b.updatedAt);
   } catch (error) {
     console.log(error);
   }

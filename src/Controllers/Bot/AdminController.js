@@ -31,40 +31,61 @@ module.exports = (app, bot) => {
         if (msg.text == 'Заказы в работе') {
           const status = Status.New;
           const result = await getProductsGeneralByStatus({ status });
-          result
-            .sort((a, b) => a.updatedAt - b.updatedAt)
-            .forEach((product) => {
-              console.log(product._id);
-              const productText = `${product.productText}\n${product.updatedAt}`;
+          result.forEach((product) => {
+            const productText = `${product.productText}\n${product.updatedAt}`;
 
-              // Create a unique callback data for each product
-              const callbackData = `${product._id}`;
+            // Create a unique callback data for each product
+            const callbackData = `${product._id}`;
 
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {
-                  inline_keyboard: [
-                    [
-                      {
-                        text: 'В работе',
-                        callback_data: `${callbackData}:${Status.OnReview}`,
-                      },
-                    ],
-                    [
-                      {
-                        text: 'На доработку',
-                        callback_data: `${callbackData}:${Status.ToEdit}`,
-                      },
-                    ],
-                    [
-                      {
-                        text: 'Отмена',
-                        callback_data: `${callbackData}:${Status.Reject}`,
-                      },
-                    ],
+            bot.sendMessage(adminId, productText, {
+              reply_markup: {
+                inline_keyboard: [
+                  [
+                    {
+                      text: 'В работе',
+                      callback_data: `${callbackData}:${Status.OnReview}`,
+                    },
                   ],
-                },
-              });
+                  [
+                    {
+                      text: 'На доработку',
+                      callback_data: `${callbackData}:${Status.ToEdit}`,
+                    },
+                  ],
+                  [
+                    {
+                      text: 'Отмена',
+                      callback_data: `${callbackData}:${Status.Reject}`,
+                    },
+                  ],
+                ],
+              },
             });
+          });
+        }
+
+        if (msg.text == 'Заказы на доработку') {
+          const status = Status.ToEdit;
+          const result = await getProductsGeneralByStatus({ status });
+          result.forEach((product) => {
+            const productText = `${product.productText}\n${product.updatedAt}`;
+
+            bot.sendMessage(adminId, productText, {
+              reply_markup: {},
+            });
+          });
+        }
+
+        if (msg.text == 'Отмененные заказы') {
+          const status = Status.Reject;
+          const result = await getProductsGeneralByStatus({ status });
+          result.forEach((product) => {
+            const productText = `${product.productText}\n${product.updatedAt}`;
+
+            bot.sendMessage(adminId, productText, {
+              reply_markup: {},
+            });
+          });
         }
       }
       // Listen for callback queries
@@ -101,8 +122,6 @@ module.exports = (app, bot) => {
           default:
             console.log('default');
         }
-
-        console.log(productId, action);
       });
     } catch (err) {
       console.log('err');
