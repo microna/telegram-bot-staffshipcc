@@ -2,6 +2,7 @@ const { mainButtons } = require('../../Components/Buttons');
 
 module.exports = (app, bot) => {
   bot.on('text', async (msg) => {
+    
     if (msg.text === '/menu') {
       await bot.sendMessage(msg.chat.id, `Меню бота`, {
         reply_markup: {

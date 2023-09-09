@@ -1,16 +1,13 @@
+const { Status } = require('../../Components/Status');
 const { saveProduct, updateProductStatus } = require('../../Storages/ProductStorage');
 const { saveUser } = require('../../Storages/UserStorage');
-const { commands } = require('../../utils/commands');
+const { commands, adminCommands } = require('../../utils/commands');
 
 module.exports = (app, bot) => {
-  const Status = {
-    OnReview: 'On review',
-    Finalize: 'Finalize',
-    Reject: 'Reject',
-  };
   const adminId = process.env.ADMIN_ID;
+  const isAdmin = false; //adminId === msg.from.id;
   // Matches "/echo [whatever]"
-  bot.setMyCommands(commands);
+  bot.setMyCommands(isAdmin ? adminCommands : commands);
 
   bot.onText(/\/start/, async (msg) => {
     try {
@@ -69,7 +66,7 @@ module.exports = (app, bot) => {
       const result = await updateProductStatus({
         clientId: from.id,
         trackNumber: 'NP000000000000000NPG',
-        status: Status.Finalize,
+        status: Status.ToEdit,
       });
       if (result) {
         await bot.sendMessage(adminId, `Status посилки успішно змінений у БД!`);

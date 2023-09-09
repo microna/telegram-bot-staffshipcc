@@ -1,7 +1,7 @@
 const commands = [
   {
     command: 'menu',
-    description: 'Просмотретьь меню',
+    description: 'Просмотреть меню',
   },
   {
     command: 'help',
@@ -9,4 +9,11 @@ const commands = [
   },
 ];
 
-module.exports = { commands };
+const adminCommands = [
+  {
+    command: 'admin',
+    description: 'Админ панель',
+  },
+];
+
+module.exports = { commands, adminCommands };

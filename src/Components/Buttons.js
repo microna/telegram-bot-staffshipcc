@@ -5,4 +5,6 @@ const mainButtons = [
   ['❌ Закрыть меню'],
 ];
 
-module.exports = { mainButtons };
+const adminButtons = [['Заказы в работе', 'Заказы на доработку', 'Отмененные заказы']];
+
+module.exports = { mainButtons, adminButtons };

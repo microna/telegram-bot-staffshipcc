@@ -1,4 +1,6 @@
 const { mainButtons } = require('../../Components/Buttons');
+const { Status } = require('../../Components/Status');
+const { saveProductGeneral } = require('../../Storages/ProductGeneral');
 
 const info = {
   yourMsg: 'Ваше сообщение отправлено администратору.',
@@ -8,10 +10,14 @@ const info = {
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
   bot.on('text', async (msg) => {
-    const { chat, message_id, text } = msg;
-    console.log(text.toString().toLowerCase());
+    const { chat, text, from } = msg;
     if (text.toString().toLowerCase().includes(info.recipient)) {
-      // Уведомьте клиента, что сообщение отправлено администратору
+      const product = {
+        productText: text,
+        status: Status.New,
+        userTGId: from.id,
+      };
+      const result = await saveProductGeneral(product);
       await bot.sendMessage(chat.id, info.yourMsg, {
         reply_markup: {
           keyboard: [['Редактировать посилку', 'На главную']],
@@ -20,7 +26,12 @@ module.exports = (app, bot) => {
       });
 
       // Перешлите сообщение администратору
-      await bot.forwardMessage(adminId, chat.id, message_id);
+      // await bot.forwardMessage(adminId, chat.id, message_id);
+      await bot.sendMessage(
+        adminId,
+        `ID: \n${result._id} \nСообщение: \n${product.productText} \nСтатус: \n${Status.New}`,
+        {},
+      );
     }
     if (msg.text === 'Додати посилку' || msg.text === 'Редактировать посилку') {
       await bot.sendMessage(
