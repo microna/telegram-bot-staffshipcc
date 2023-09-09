@@ -38,22 +38,22 @@ module.exports = (app, bot) => {
         {},
       );
     }
-    if (msg.text === 'Тарифы') {
+    if (msg.text === '🤑Тарифы') {
       await bot.sendMessage(chat.id, `TODO Информация по тарифам...`, {
         parse_mode: 'HTML',
       });
     }
-    if (msg.text === 'Правила') {
+    if (msg.text === '📜Правила') {
       await bot.sendMessage(chat.id, `TODO Информация по правилам...`, {
         parse_mode: 'HTML',
       });
     }
-    if (msg.text === 'Написать нам') {
+    if (msg.text === '✏️Написать нам') {
       await bot.sendMessage(chat.id, `TODO написать нам...`, {
         parse_mode: 'HTML',
       });
     }
-    if (msg.text === 'Канал') {
+    if (msg.text === '🔥Канал') {
       await bot.sendMessage(chat.id, `TODO наш канал...`, {
         parse_mode: 'HTML',
       });
