@@ -1,12 +1,18 @@
-const { mainButtons } = require("../../Components/Buttons");
+const { mainButtons } = require('../../Components/Buttons');
+
+const info = {
+  yourMsg: 'Ваше сообщение отправлено администратору.',
+  recipient: 'отримувач -',
+};
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
   bot.on('text', async (msg) => {
     const { chat, message_id, text } = msg;
-    if (text.startsWith('Отримувач - ') && text.toString().toLowerCase().includes('+380')) {
+    console.log(text.toString().toLowerCase());
+    if (text.toString().toLowerCase().includes(info.recipient)) {
       // Уведомьте клиента, что сообщение отправлено администратору
-      await bot.sendMessage(chat.id, 'Ваше сообщение отправлено администратору.', {
+      await bot.sendMessage(chat.id, info.yourMsg, {
         reply_markup: {
           keyboard: [['Редактировать посилку', 'На главную']],
           resize_keyboard: true,
