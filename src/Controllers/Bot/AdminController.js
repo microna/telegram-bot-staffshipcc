@@ -1,4 +1,4 @@
-const { adminButtons } = require('../../Components/Buttons');
+const { adminButtons, productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
 const {
   getProductsGeneralByStatus,
@@ -29,7 +29,7 @@ module.exports = (app, bot) => {
       const { from } = msg;
       if (+from.id === +adminId) {
         if (msg.text == 'Заказы в работе') {
-          const status = Status.New;
+          const status = Status.OnReview;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
@@ -45,22 +45,11 @@ module.exports = (app, bot) => {
             bot.sendMessage(adminId, productText, {
               reply_markup: {
                 inline_keyboard: [
+                  ...productButtons(product._id, Status),
                   [
-                    {
-                      text: 'В работе',
-                      callback_data: `${callbackData}:${Status.OnReview}`,
-                    },
-                  ],
-                  [
-                    {
-                      text: 'На доработку',
-                      callback_data: `${callbackData}:${Status.ToEdit}`,
-                    },
-                  ],
-                  [
-                    {
-                      text: 'Отмена',
-                      callback_data: `${callbackData}:${Status.Reject}`,
+                    product.status === Status.OnReview && {
+                      text: 'В архив',
+                      callback_data: `${callbackData}:${Status.Archive}`,
                     },
                   ],
                 ],
@@ -68,6 +57,23 @@ module.exports = (app, bot) => {
             });
           });
         }
+
+        // if (msg.text == 'Заказы в работе') {
+        //   const status = Status.OnReview;
+        //   const result = await getProductsGeneralByStatus({ status });
+        //   if (result.length <= 0) {
+        //     bot.sendMessage(adminId, 'Пусто', {
+        //       reply_markup: {},
+        //     });
+        //   }
+        //   result.forEach((product) => {
+        //     const productText = `${product.productText}\n${product.updatedAt}`;
+
+        //     bot.sendMessage(adminId, productText, {
+        //       reply_markup: {},
+        //     });
+        //   });
+        // }
 
         if (msg.text == 'Заказы на доработку') {
           const status = Status.ToEdit;
@@ -113,6 +119,26 @@ module.exports = (app, bot) => {
           result.forEach((product) => {
             const productText = `${product.productText}\n${product.updatedAt}`;
 
+            // Create a unique callback data for each product
+
+            bot.sendMessage(adminId, productText, {
+              reply_markup: {
+                inline_keyboard: [...productButtons(product._id, Status)],
+              },
+            });
+          });
+        }
+        if (msg.text == 'Архив') {
+          const status = Status.Archive;
+          const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
+          result.forEach((product) => {
+            const productText = `${product.productText}\n${product.updatedAt}`;
+
             bot.sendMessage(adminId, productText, {
               reply_markup: {},
             });
@@ -125,36 +151,47 @@ module.exports = (app, bot) => {
   });
   // Listen for callback queries
   bot.on('callback_query', async (callbackQuery) => {
-    const { data } = callbackQuery;
-    const [productId, action] = data.split(':');
-    const changeProductStatus = async ({ id, status, message }) => {
-      const result = await updateProductGeneral({ status, id });
-      await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
-    };
+    try {
+      const { data } = callbackQuery;
+      const [productId, action] = data.split(':');
+      const changeProductStatus = async ({ id, status, message }) => {
+        const result = await updateProductGeneral({ status, id });
+        if (status !== Status.Archive) {
+          await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
+        }
+        await bot.sendMessage(adminId, `Продукт добавлен в ${status}`, {});
+      };
 
-    switch (action) {
-      case Status.OnReview:
-        console.log(Status.OnReview);
-        changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
-        break;
-      case Status.ToEdit:
-        console.log(Status.ToEdit);
-        changeProductStatus({
-          id: productId,
-          status: action,
-          message: 'Заказ нужно исправить: ',
-        });
-        break;
-      case Status.Reject:
-        console.log(Status.Reject);
-        changeProductStatus({
-          id: productId,
-          status: action,
-          message: 'Заказ отменен: ',
-        });
-        break;
-      default:
-        console.log('default');
+      switch (action) {
+        case Status.OnReview:
+          changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
+          break;
+        case Status.ToEdit:
+          changeProductStatus({
+            id: productId,
+            status: action,
+            message: 'Заказ нужно исправить: ',
+          });
+          break;
+        case Status.Reject:
+          changeProductStatus({
+            id: productId,
+            status: action,
+            message: 'Заказ отменен: ',
+          });
+          break;
+        case Status.Archive:
+          changeProductStatus({
+            id: productId,
+            status: action,
+            message: 'Заказ добавлен в архив: ',
+          });
+          break;
+        default:
+          console.log('default');
+      }
+    } catch (err) {
+      console.log('callback_query error');
     }
   });
 };

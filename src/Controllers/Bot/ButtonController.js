@@ -4,7 +4,7 @@ const { saveProductGeneral } = require('../../Storages/ProductGeneral');
 
 const info = {
   yourMsg: 'Ваше сообщение отправлено администратору.',
-  recipient: 'отримувач -',
+  recipient: 'отримувач',
 };
 
 module.exports = (app, bot) => {
