@@ -14,7 +14,7 @@ module.exports = (app, bot) => {
       );
       const isAdmin = Boolean(+adminId === +msg.from.id);
       // Matches "/echo [whatever]"
-      bot.setMyCommands(isAdmin ? { ...adminCommands, ...commands } : commands);
+      bot.setMyCommands(isAdmin ? adminCommands : commands);
     } catch (error) {
       console.log('error');
     }
