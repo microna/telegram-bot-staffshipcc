@@ -6,7 +6,32 @@ const mainButtons = [
 ];
 
 const adminButtons = [
-  ['Новие закази', 'Заказы в работе', 'Заказы на доработку', 'Отмененные заказы'],
+  ['Новие закази', 'Заказы в работе'],
+  ['Заказы на доработку', 'Отмененные заказы'],
+  ['Архив']
 ];
 
-module.exports = { mainButtons, adminButtons };
+const productButtons = (callbackData, status) => {
+  return [
+    [
+      {
+        text: 'В работе',
+        callback_data: `${callbackData}:${status.OnReview}`,
+      },
+    ],
+    [
+      {
+        text: 'На доработку',
+        callback_data: `${callbackData}:${status.ToEdit}`,
+      },
+    ],
+    [
+      {
+        text: 'Отмена',
+        callback_data: `${callbackData}:${status.Reject}`,
+      },
+    ],
+  ];
+};
+
+module.exports = { mainButtons, adminButtons, productButtons };
