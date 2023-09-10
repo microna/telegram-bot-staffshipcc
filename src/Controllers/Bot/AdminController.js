@@ -28,7 +28,7 @@ module.exports = (app, bot) => {
     try {
       const { from } = msg;
       if (+from.id === +adminId) {
-        if (msg.text == 'Заказы в работе') {
+        if (msg.text == '🛠Заказы в работе') {
           const status = Status.OnReview;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
@@ -75,7 +75,7 @@ module.exports = (app, bot) => {
         //   });
         // }
 
-        if (msg.text == 'Заказы на доработку') {
+        if (msg.text == '📌Заказы на доработку') {
           const status = Status.ToEdit;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
@@ -92,7 +92,7 @@ module.exports = (app, bot) => {
           });
         }
 
-        if (msg.text == 'Отмененные заказы') {
+        if (msg.text == '❌Отмененные заказы') {
           const status = Status.Reject;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
@@ -108,7 +108,7 @@ module.exports = (app, bot) => {
             });
           });
         }
-        if (msg.text == 'Новие закази') {
+        if (msg.text == '✅Новие закази') {
           const status = Status.New;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
@@ -128,7 +128,7 @@ module.exports = (app, bot) => {
             });
           });
         }
-        if (msg.text == 'Архив') {
+        if (msg.text == '🧙🏼‍♂️Архив') {
           const status = Status.Archive;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
