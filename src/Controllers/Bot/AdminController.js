@@ -84,7 +84,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}`;
+            const productText = `${product.productText}\n${product.updatedAt}\nкомментарии администратора: \n${product.comments}`;
 
             bot.sendMessage(adminId, productText, {
               reply_markup: {},
@@ -154,8 +154,8 @@ module.exports = (app, bot) => {
     try {
       const { data } = callbackQuery;
       const [productId, action] = data.split(':');
-      const changeProductStatus = async ({ id, status, message }) => {
-        const result = await updateProductGeneral({ status, id });
+      const changeProductStatus = async ({ id, status, message, adminMessage }) => {
+        const result = await updateProductGeneral({ status, id, adminMessage });
         if (status !== Status.Archive) {
           await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
         }
