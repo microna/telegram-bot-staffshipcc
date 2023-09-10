@@ -12,6 +12,10 @@ const productGeneralSchema = new mongoose.Schema(
     userTGId: {
       type: Number,
     },
+    comments: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,
