@@ -31,6 +31,11 @@ module.exports = (app, bot) => {
         if (msg.text == 'Заказы в работе') {
           const status = Status.New;
           const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
           result.forEach((product) => {
             const productText = `${product.productText}\n${product.updatedAt}`;
 
@@ -67,6 +72,11 @@ module.exports = (app, bot) => {
         if (msg.text == 'Заказы на доработку') {
           const status = Status.ToEdit;
           const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
           result.forEach((product) => {
             const productText = `${product.productText}\n${product.updatedAt}`;
 
@@ -79,6 +89,11 @@ module.exports = (app, bot) => {
         if (msg.text == 'Отмененные заказы') {
           const status = Status.Reject;
           const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
           result.forEach((product) => {
             const productText = `${product.productText}\n${product.updatedAt}`;
 
@@ -90,6 +105,11 @@ module.exports = (app, bot) => {
         if (msg.text == 'Новие закази') {
           const status = Status.New;
           const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
           result.forEach((product) => {
             const productText = `${product.productText}\n${product.updatedAt}`;
 
@@ -99,49 +119,42 @@ module.exports = (app, bot) => {
           });
         }
       }
-
-      // Listen for callback queries
-      bot.on('callback_query', async (callbackQuery) => {
-        const { data } = callbackQuery;
-        const [productId, action] = data.split(':');
-
-        const changeProductStatus = async ({ id, status, message }) => {
-          const result = await updateProductGeneral({ status, id });
-          await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
-        };
-
-        // switch (action) {
-        //   case Status.OnReview:
-        //     console.log(Status.OnReview);
-        //     changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
-        //     break;
-        //   case Status.ToEdit:
-        //     console.log(Status.ToEdit);
-        //     changeProductStatus({
-        //       id: productId,
-        //       status: action,
-        //       message: 'Заказ нужно исправить: ',
-        //     });
-        //     break;
-        //   case Status.Reject:
-        //     console.log(Status.Reject);
-        //     changeProductStatus({
-        //       id: productId,
-        //       status: action,
-        //       message: 'Заказ отменен: ',
-        //     });
-        //     break;
-        //   default:
-        //     console.log('default');
-        // }
-        console.log(action);
-        if (action === Status.OnReview) {
-          console.log(Status.OnReview);
-          changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
-        }
-      });
     } catch (err) {
       console.log('err');
+    }
+  });
+  // Listen for callback queries
+  bot.on('callback_query', async (callbackQuery) => {
+    const { data } = callbackQuery;
+    const [productId, action] = data.split(':');
+    const changeProductStatus = async ({ id, status, message }) => {
+      const result = await updateProductGeneral({ status, id });
+      await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
+    };
+
+    switch (action) {
+      case Status.OnReview:
+        console.log(Status.OnReview);
+        changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
+        break;
+      case Status.ToEdit:
+        console.log(Status.ToEdit);
+        changeProductStatus({
+          id: productId,
+          status: action,
+          message: 'Заказ нужно исправить: ',
+        });
+        break;
+      case Status.Reject:
+        console.log(Status.Reject);
+        changeProductStatus({
+          id: productId,
+          status: action,
+          message: 'Заказ отменен: ',
+        });
+        break;
+      default:
+        console.log('default');
     }
   });
 };
