@@ -5,9 +5,6 @@ const { commands, adminCommands } = require('../../utils/commands');
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
-  const isAdmin = false; //adminId === msg.from.id;
-  // Matches "/echo [whatever]"
-  bot.setMyCommands(isAdmin ? adminCommands : commands);
 
   bot.onText(/\/start/, async (msg) => {
     try {
@@ -15,6 +12,9 @@ module.exports = (app, bot) => {
         msg.chat.id,
         `Вы запустили бота! \n Нажмите на кнопку menu что бы начать работу с ботом \n TODO text...`,
       );
+      const isAdmin = Boolean(+adminId === +msg.from.id);
+      // Matches "/echo [whatever]"
+      bot.setMyCommands(isAdmin ? { ...adminCommands, ...commands } : commands);
     } catch (error) {
       console.log('error');
     }

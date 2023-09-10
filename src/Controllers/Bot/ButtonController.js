@@ -1,4 +1,4 @@
-const { mainButtons } = require('../../Components/Buttons');
+const { mainButtons, productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
 const { saveProductGeneral } = require('../../Storages/ProductGeneral');
 
@@ -27,10 +27,16 @@ module.exports = (app, bot) => {
 
       // Перешлите сообщение администратору
       // await bot.forwardMessage(adminId, chat.id, message_id);
+
+      const id = result._id.toString().replace(/ObjectId\("|"\)/g, '');
       await bot.sendMessage(
         adminId,
-        `ID: \n${result._id} \nСообщение: \n${product.productText} \nСтатус: \n${Status.New}`,
-        {},
+        `ID: \n${id} \nСообщение: \n${product.productText} \nСтатус: \n${Status.New}`,
+        {
+          reply_markup: {
+            inline_keyboard: [...productButtons(id, Status)],
+          },
+        },
       );
     }
     if (msg.text === 'Додати посилку' || msg.text === 'Редактировать посилку') {
