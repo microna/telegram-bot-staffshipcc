@@ -29,7 +29,7 @@ module.exports = (app, bot) => {
       const { from } = msg;
       if (+from.id === +adminId) {
         if (msg.text == 'Заказы в работе') {
-          const status = Status.New;
+          const status = Status.OnReview;
           const result = await getProductsGeneralByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
@@ -65,6 +65,23 @@ module.exports = (app, bot) => {
                   ],
                 ],
               },
+            });
+          });
+        }
+
+        if (msg.text == 'Заказы на доработку') {
+          const status = Status.OnReview;
+          const result = await getProductsGeneralByStatus({ status });
+          if (result.length <= 0) {
+            bot.sendMessage(adminId, 'Пусто', {
+              reply_markup: {},
+            });
+          }
+          result.forEach((product) => {
+            const productText = `${product.productText}\n${product.updatedAt}`;
+
+            bot.sendMessage(adminId, productText, {
+              reply_markup: {},
             });
           });
         }
@@ -134,7 +151,6 @@ module.exports = (app, bot) => {
 
     switch (action) {
       case Status.OnReview:
-        console.log(Status.OnReview);
         changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
         break;
       case Status.ToEdit:
