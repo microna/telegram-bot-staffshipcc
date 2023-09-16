@@ -27,6 +27,9 @@ jobs:
       - name: Install Frontend Dependencies
         run: cd frontend && yarn install
 
+      - name: Lint Frontend
+        run: cd frontend && yarn lint
+
       - name: Build Frontend
         run: cd frontend && yarn build
 
