@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const { getAllProducts } = require('./src/Storages/ProductGeneral');
+const { getAllProducts, updateProductGeneral } = require('./src/Storages/ProductGeneral');
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 
@@ -38,6 +38,15 @@ app.get('/products', checkAuth, async (req, res) => {
 app.get('/adduser', async (req, res) => {
   const products = await addAdminUser();
   res.json(products);
+});
+
+app.patch('/changeProductStatus', checkAuth, async (req, res) => {
+  const { id, status } = req.body;
+  const result = await updateProductGeneral({ id, status });
+
+  if (result) {
+    res.json({ isStatusEdited: true });
+  }
 });
 
 app.post('/login', login);
