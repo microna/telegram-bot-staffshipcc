@@ -2,12 +2,13 @@
    "name": "telegram-bot-staffshipcc",
    "version": "1.0.0",
    "main": "index.js",
+   "license": "WTFPL",
    "scripts": {
       "start:backend": "cd backend && yarn start:dev",
-      "lint:backend": "cd backend && yarn lint",
-      "install:backend": "cd backend && yarn",
       "start:frontend": "cd frontend && yarn start",
+      "lint:backend": "cd backend && yarn lint",
       "lint:frontend": "cd frontend && yarn lint",
+      "install:backend": "cd backend && yarn",
       "install:frontend": "cd frontend && yarn",
       "build:frontend": "cd frontend && yarn build && cp -r build/* ../backend/public/"
    }

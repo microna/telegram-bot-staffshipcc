@@ -34,8 +34,7 @@ export const AuthStateProvider: React.FC<IAuthStateProviderProps> = ({
     if (!isAuthResolved) {
       setTimeout(() => setAuthState({ isAuthResolved: true }), 0);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthResolved]);
 
   return (
     <AuthStateContext.Provider
