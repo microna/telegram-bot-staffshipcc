@@ -40,8 +40,29 @@ const getProductsGeneralByStatus = async ({ status }) => {
   }
 };
 
+const getProductById = async ({ id }) => {
+  try {
+    const product = await ProductGeneralModel.findById({ _id: id });
+    return product;
+  } catch (error) {
+    console.log('err getProductById');
+  }
+};
+
+const getAllProducts = async () => {
+  try {
+    const product = await ProductGeneralModel.find();
+
+    return product;
+  } catch (error) {
+    console.log('err get all products');
+  }
+};
+
 module.exports = {
   saveProductGeneral,
   updateProductGeneral,
   getProductsGeneralByStatus,
+  getProductById,
+  getAllProducts,
 };

@@ -22,9 +22,6 @@ const productButtons = (callbackData, status) => {
         text: 'На доработку',
         callback_data: `${callbackData}:${status.ToEdit}`,
       },
-    ],
-
-    [
       {
         text: 'Отмена',
         callback_data: `${callbackData}:${status.Reject}`,

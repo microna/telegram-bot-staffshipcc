@@ -18,9 +18,25 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install Backend Dependencies
+        run: cd backend && yarn install
 
-      - name: Run Linter
-        run: npm run lint # Replace with your linting command
+      - name: Lint Backend
+        run: cd backend && yarn lint
 
+      - name: Install Frontend Dependencies
+        run: cd frontend && yarn install
+
+      - name: Build Frontend
+        run: cd frontend && yarn build
+
+      - name: Copy Build to Backend Public Folder
+        run: cp -r frontend/build/* backend/public/
+
+  pr_verified:
+    name: Pull request verified
+    needs: [lint_and_test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Successful pr
+        run: echo Successful pr
