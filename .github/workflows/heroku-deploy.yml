@@ -21,10 +21,10 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: yarn install:backend
 
       - name: Run Lint
-        run: npm run lint
+        run: yarn lint:backend
 
       - name: Install Heroku CLI
         run: |

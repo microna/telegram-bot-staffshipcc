@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
+const { getAllProducts } = require('./src/Storages/ProductGeneral');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -18,6 +19,7 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
 require('./src/Controllers/Bot/BotController')(app, bot);
@@ -26,10 +28,13 @@ require('./src/Controllers/Bot/UserController')(app, bot);
 require('./src/Controllers/Bot/AdminController')(app, bot);
 require('./src/Controllers/Bot/ButtonController')(app, bot);
 
-app.get('/', (req, res) => {
-  res.json({
-    hello: 'Dev!',
-  });
+app.get('/products', async (req, res) => {
+  const products = await getAllProducts();
+  res.json(products);
+});
+
+app.get('*', function (req, res) {
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(PORT, () => {

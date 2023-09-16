@@ -1,4 +1,4 @@
-const { adminButtons, productButtons } = require('../../Components/Buttons');
+const { productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
 const {
   getProductsGeneralByStatus,
@@ -7,27 +7,36 @@ const {
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
-  bot.on('text', async (msg) => {
-    try {
-      if (+msg.from.id === +adminId) {
-        if (msg.text == '/admin') {
-          await bot.sendMessage(msg.chat.id, `Заказы`, {
-            reply_markup: {
-              keyboard: adminButtons,
-              resize_keyboard: true,
-            },
-          });
-        }
-      }
-    } catch (err) {
-      console.log('err');
-    }
-  });
 
   bot.on('text', async (msg) => {
     try {
       const { from } = msg;
       if (+from.id === +adminId) {
+        if (msg.text.toString().includes(Status.Reject)) {
+          const { text } = msg;
+          console.log(text.split(':'));
+          const [product, message] = text.split(':');
+          const [productId, status] = product.split(',');
+
+          console.log(productId, status, message);
+
+          const result = await updateProductGeneral({
+            id: productId,
+            status,
+            adminMessage: message,
+          });
+          bot.sendMessage(
+            result.userTGId,
+            `Админ отменил вашу посылку: \n${result.productText} По причине: ${message}`,
+            {
+              reply_markup: {},
+            },
+          );
+          bot.sendMessage(adminId, 'Сообщение пользователю отправлено', {
+            reply_markup: {},
+          });
+        }
+
         if (msg.text == '🛠Заказы в работе') {
           const status = Status.OnReview;
           const result = await getProductsGeneralByStatus({ status });
@@ -46,8 +55,8 @@ module.exports = (app, bot) => {
               reply_markup: {
                 inline_keyboard: [
                   ...productButtons(product._id, Status),
-                  [
-                    product.status === Status.OnReview && {
+                  product.status === Status.OnReview && [
+                    {
                       text: 'В архив',
                       callback_data: `${callbackData}:${Status.Archive}`,
                     },
@@ -146,7 +155,7 @@ module.exports = (app, bot) => {
         }
       }
     } catch (err) {
-      console.log('err');
+      console.log('err admin controller');
     }
   });
   // Listen for callback queries
@@ -154,12 +163,26 @@ module.exports = (app, bot) => {
     try {
       const { data } = callbackQuery;
       const [productId, action] = data.split(':');
-      const changeProductStatus = async ({ id, status, message, adminMessage }) => {
-        const result = await updateProductGeneral({ status, id, adminMessage });
+      console.log(action);
+      const changeProductStatus = async ({ id, status, message }) => {
+        const result = await updateProductGeneral({ status, id });
         if (status !== Status.Archive) {
-          await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {});
+          await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {
+            reply_markup: {
+              force_reply: true,
+            },
+          });
         }
-        await bot.sendMessage(adminId, `Продукт добавлен в ${status}`, {});
+        if (status === Status.Reject || status === Status.ToEdit) {
+          // const id = await getProductById({ id });
+          await bot.sendMessage(
+            adminId,
+            `${id},${status}: Вы хотите изменить статус на ${status}, для посылки ${id} Напишите причину. Напишите Причина и далее текст `,
+            {},
+          );
+        } else {
+          await bot.sendMessage(adminId, `Продукт добавлен в статус: ${status}`, {});
+        }
       };
 
       switch (action) {
