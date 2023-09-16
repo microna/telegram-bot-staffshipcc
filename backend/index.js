@@ -5,6 +5,8 @@ const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const { getAllProducts } = require('./src/Storages/ProductGeneral');
+const { checkAuth } = require('./src/utils/checkAuth');
+const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -28,10 +30,17 @@ require('./src/Controllers/Bot/UserController')(app, bot);
 require('./src/Controllers/Bot/AdminController')(app, bot);
 require('./src/Controllers/Bot/ButtonController')(app, bot);
 
-app.get('/products', async (req, res) => {
+app.get('/products', checkAuth, async (req, res) => {
   const products = await getAllProducts();
   res.json(products);
 });
+
+app.get('/adduser', async (req, res) => {
+  const products = await addAdminUser();
+  res.json(products);
+});
+
+app.post('/login', login);
 
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');

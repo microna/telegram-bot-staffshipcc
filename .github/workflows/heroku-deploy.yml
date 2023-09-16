@@ -1,49 +1,58 @@
 name: Deploy to Heroku
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to deploy'
-        required: true
+   workflow_dispatch:
+      inputs:
+         branch:
+            description: 'Branch to deploy'
+            required: true
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+   deploy:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18
+         - name: Set up Node.js
+           uses: actions/setup-node@v2
+           with:
+              node-version: 18
 
-      - name: Install Dependencies
-        run: yarn install:backend
+         - name: Install Backend Dependencies
+           run: cd backend && yarn install
 
-      - name: Run Lint
-        run: yarn lint:backend
+         - name: Lint Backend
+           run: cd backend && yarn lint
 
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
+         - name: Install Frontend Dependencies
+           run: cd frontend && yarn install
 
-      - name: Set Heroku Config
-        run: |
-          echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
-          chmod 600 ~/.netrc
+         - name: Build Frontend
+           run: cd frontend && yarn build
 
-      - name: Deploy to Heroku
-        run: |
-          if [ ${{ github.event.inputs.branch }} == 'main' ]; then
-            heroku pipelines:promote -a staffshipcc-bot-prod
-          elif [ ${{ github.event.inputs.branch }} == 'dev' ]; then
-            heroku pipelines:promote -a staffshipcc-development-bot
-          elif [ ${{ github.event.inputs.branch }} == 'staging' ]; then
-            heroku pipelines:promote -a staffshipcc-staging-bot
-          fi
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+         - name: Copy Build to Backend Public Folder
+           run: cp -r frontend/build/* backend/public/
+           
+         - name: Install Heroku CLI
+           run: |
+              curl https://cli-assets.heroku.com/install.sh | sh
+
+         - name: Set Heroku Config
+           run: |
+              echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
+              chmod 600 ~/.netrc
+
+         - name: Deploy to Heroku
+           run: |
+              if [ ${{ github.event.inputs.branch }} == 'main' ]; then
+                heroku pipelines:promote -a staffshipcc-bot-prod
+              elif [ ${{ github.event.inputs.branch }} == 'dev' ]; then
+                heroku pipelines:promote -a staffshipcc-development-bot
+              elif [ ${{ github.event.inputs.branch }} == 'staging' ]; then
+                heroku pipelines:promote -a staffshipcc-staging-bot
+              fi
+           env:
+              HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+              HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
