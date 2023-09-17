@@ -1,12 +1,6 @@
 /* eslint-disable */
 import { ChangeEvent } from 'react';
-import {
-  Button,
-  Label,
-  Modal,
-  Table,
-  Textarea,
-} from 'flowbite-react';
+import { Button, Label, Modal, Table, Textarea } from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';
@@ -42,23 +36,6 @@ const TableProductsPage: FC<TableProductsPageProps> = function ({
 }) {
   return (
     <>
-      <div className="block items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 sm:flex">
-        <div className="mb-1 w-full">
-          <div className="block items-center sm:flex">
-            {/* <SearchForProducts />
-            <div className="hidden space-x-1 border-l border-gray-100 pl-2 dark:border-gray-700 md:flex">
-              <a
-                href="#"
-                className="inline-flex cursor-pointer justify-center rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                <span className="sr-only">Configure</span>
-                <HiCog className="text-2xl" />
-              </a>
-            </div> */}
-            <div className="flex w-full items-center sm:justify-end"></div>
-          </div>
-        </div>
-      </div>
       <div className="flex flex-col">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -152,6 +129,14 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-0"
+                onClick={() => setStatus(Status.New)}
+              >
+                New
+              </button>
+              <button
+                className="text-gray-700 block px-4 py-2 text-sm"
+                role="menuitem"
+                id="menu-item-0"
                 onClick={() => setStatus(Status.ToEdit)}
               >
                 To edit
@@ -205,7 +190,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         </Modal.Body>
         <Modal.Footer>
           <Button
-            className="w-full bg-gray-400 text-lg"
+            className="w-full bg-gray-400 text-lg m-[10px]"
             color="primary"
             onClick={() => handleChangeProductStatus()}
           >
@@ -224,11 +209,9 @@ const ProductsTable: FC<TableProductsPageProps> = function ({
   return (
     <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700"></Table.Head>
-      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-        <Table.Row className="hover:bg-gray-100 dark:hover:bg-gray-700"></Table.Row>
-
+      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800 ">
         <Table.Row className="hover:bg-gray-100 dark:hover:bg-gray-700">
-          <Table.Cell className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
+          <Table.Cell className="whitespace-nowrap p-4 pl-[50px] text-sm font-normal text-gray-500 dark:text-gray-400">
             <div className="text-base font-semibold text-gray-900 dark:text-white">
               {product.updatedAt}
             </div>
@@ -239,11 +222,11 @@ const ProductsTable: FC<TableProductsPageProps> = function ({
           <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white w-[120px]">
             {product.status}
           </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white ">
             {product.userTGId}
           </Table.Cell>
 
-          <Table.Cell className="space-x-2 whitespace-nowrap p-4">
+          <Table.Cell className="space-x-2 whitespace-nowrap p-4 pr-[50px]">
             <div className="flex items-center gap-x-3">
               <EditProductModal
                 product={product}
