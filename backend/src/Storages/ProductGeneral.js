@@ -14,7 +14,7 @@ const saveProductGeneral = async ({ productText, status, userTGId }) => {
   }
 };
 
-const updateProductGeneral = async ({ id, status, adminMessage = '' }) => {
+const updateProductGeneral = async ({ id, status, message = '' }) => {
   try {
     const product = await ProductGeneralModel.findOneAndUpdate(
       {
@@ -22,7 +22,7 @@ const updateProductGeneral = async ({ id, status, adminMessage = '' }) => {
       },
       {
         status,
-        comments: adminMessage,
+        comments: message,
       },
     );
     return product;
