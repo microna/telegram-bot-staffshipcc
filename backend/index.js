@@ -4,7 +4,11 @@ const express = require('express');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const { getAllProducts, updateProductGeneral } = require('./src/Storages/ProductGeneral');
+const {
+  getAllProducts,
+  updateProductGeneral,
+  getProductById,
+} = require('./src/Storages/ProductGeneral');
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 
@@ -18,6 +22,8 @@ mongoose
 const PORT = process.env.PORT || 4444;
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
+
+const adminId = process.env.ADMIN_ID;
 
 app.use(cors());
 app.use(express.json());
@@ -41,11 +47,21 @@ app.get('/adduser', async (req, res) => {
 });
 
 app.patch('/changeProductStatus', checkAuth, async (req, res) => {
-  const { id, status } = req.body;
-  const result = await updateProductGeneral({ id, status });
-
-  if (result) {
-    res.json({ isStatusEdited: true });
+  try {
+    const { id, status, message } = req.body;
+    const result = await updateProductGeneral({ id, status, message });
+    const product = await getProductById({ id });
+    const textAnswer = `Product: ${product.productText} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
+    if (result) {
+      await bot.sendMessage(+product.userTGId, textAnswer, {});
+      await bot.sendMessage(+adminId, textAnswer, {});
+      res.json({ isStatusEdited: true });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: 'failed change status',
+      err,
+    });
   }
 });
 

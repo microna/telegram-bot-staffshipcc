@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
-import { RxCross2 } from 'react-icons/rx';
-import { BsPen } from 'react-icons/bs';
-import { FaHammer } from 'react-icons/fa';
+import TableProductsPage from 'pages/mainpage/component/tablePage';
+
 export interface IProduct {
   _id: string;
   productText: string;
@@ -14,39 +13,102 @@ export interface IProduct {
   updatedAt: string;
 }
 
-enum Status {
+export enum Status {
   ToEdit = 'To edit',
   Reject = 'Reject',
   OnReview = 'On review',
+  New = 'New',
   All = 'All',
 }
 
-interface IStatusChange {
-  id: string;
-  status: Status;
-}
+const DropdownMenu: React.FC<{
+  setStatus: (status: Status) => void;
+  setIsOpenDropDown: (isActive: boolean) => void;
+  buttonRef: React.RefObject<HTMLButtonElement>;
+}> = ({ setStatus, setIsOpenDropDown, buttonRef }) => {
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-const getProducts = async () => {
-  try {
-    const result = await axiosPrivate.get('products');
-    return result.data;
-  } catch (e) {
-    console.log('error get products');
-  }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        event.target !== buttonRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpenDropDown(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <div
+      className="absolute z-10 bg-gray-100 py-1"
+      role="none"
+      ref={dropdownRef}
+    >
+      <button
+        className="text-gray-700 block px-4 py-2 text-sm"
+        role="menuitem"
+        onClick={() => setStatus(Status.New)}
+      >
+        New
+      </button>
+      <button
+        className="text-gray-700 block px-4 py-2 text-sm"
+        role="menuitem"
+        onClick={() => setStatus(Status.ToEdit)}
+      >
+        To edit
+      </button>
+      <button
+        className="text-gray-700 block px-4 py-2 text-sm"
+        role="menuitem"
+        onClick={() => setStatus(Status.Reject)}
+      >
+        Reject
+      </button>
+      <button
+        className="text-gray-700 block px-4 py-2 text-sm"
+        role="menuitem"
+        onClick={() => setStatus(Status.OnReview)}
+      >
+        On review
+      </button>
+      <button
+        className="text-gray-700 block px-4 py-2 text-sm"
+        role="menuitem"
+        onClick={() => setStatus(Status.All)}
+      >
+        All
+      </button>
+    </div>
+  );
 };
-const Mainpage = () => {
-  const [products, setProducts] = useState<[] | null>(null);
-  const [status, setStatus] = useState('');
-  const [isOpenDropDown, setIsOpenDropDown] = useState(false);
-  const { clearToken } = useAuthState();
 
+const Mainpage: React.FC = () => {
+  const [products, setProducts] = useState<IProduct[] | null>(null);
+  const [status, setStatus] = useState(Status.All);
+  const { clearToken } = useAuthState();
+  const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const buttonRef = useRef(null);
   useEffect(() => {
     handleGetProducts();
   }, []);
 
   const handleGetProducts = async () => {
-    const result = await getProducts();
-    setProducts(result);
+    try {
+      const result = await axiosPrivate.get('products');
+      setProducts(result.data);
+    } catch (e) {
+      console.log('error get products');
+    }
   };
 
   const filteredProducts = (products: IProduct[], status: string) => {
@@ -57,142 +119,73 @@ const Mainpage = () => {
     }
   };
 
-  const changeProductStatus = async ({ id, status }: IStatusChange) => {
-    try {
-      const result = await axiosPrivate.patch('changeProductStatus', {
-        id,
-        status,
-      });
-
-      await handleGetProducts();
-      return result;
-    } catch (e) {
-      console.log('error login');
-    }
-  };
-
   return (
-    <>
-      <div className="w-[80%] m-auto mt-[100px]">
-        <div
-          className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="menu-button"
-        >
-          <div>
-            <button
-              type="button"
-              className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              id="menu-button"
-              aria-expanded="true"
-              aria-haspopup="true"
-              onClick={() => setIsOpenDropDown(!isOpenDropDown)}
-            >
-              Options
-              <svg
-                className="-mr-1 h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-          {isOpenDropDown && (
-            <div className="py-1" role="none">
+    <div>
+      <div className="w-[80%] m-auto  mb-[100px] mt-[100px]">
+        <div className="mb-4  flex w-full justify-between">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
+            All products
+          </h1>
+          <div
+            className="left-[700px] mt-2  w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+          >
+            <div className="flex ">
               <button
-                className="text-gray-700 block px-4 py-2 text-sm"
-                role="menuitem"
-                id="menu-item-0"
-                onClick={() => setStatus(Status.ToEdit)}
+                type="button"
+                className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                id="menu-button"
+                aria-expanded={isOpenDropDown}
+                aria-haspopup={isOpenDropDown}
+                onClick={() => setIsOpenDropDown(!isOpenDropDown)}
+                ref={buttonRef}
               >
-                To edit
-              </button>
-              <button
-                className="text-gray-700 block px-4 py-2 text-sm"
-                role="menuitem"
-                id="menu-item-1"
-                onClick={() => setStatus(Status.Reject)}
-              >
-                Reject
-              </button>
-              <button
-                className="text-gray-700 block px-4 py-2 text-sm"
-                role="menuitem"
-                id="menu-item-2"
-                onClick={() => setStatus(Status.OnReview)}
-              >
-                On rewiev
-              </button>
-              <button
-                className="text-gray-700 block px-4 py-2 text-sm"
-                role="menuitem"
-                id="menu-item-2"
-                onClick={() => setStatus(Status.All)}
-              >
-                All
+                Status: {status}
+                <svg
+                  className="mr-1 h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </button>
             </div>
-          )}
+            {isOpenDropDown && (
+              <DropdownMenu
+                setStatus={setStatus}
+                setIsOpenDropDown={setIsOpenDropDown}
+                buttonRef={buttonRef}
+              />
+            )}
+          </div>
         </div>
         {products &&
-          filteredProducts(products, status).map((product: IProduct, index) => {
-            return (
-              <div key={index} className="flex">
-                <div className="">
-                  {' '}
-                  <div className="flex justify-between pt-2"></div>{' '}
-                  <div>{product.createdAt}</div>
-                  <div>{product.productText}</div>{' '}
-                </div>
-
-                <div className="flex gap-3 ">
-                  <FaHammer
-                    className="cursor-pointer border-2"
-                    onClick={() =>
-                      changeProductStatus({
-                        id: product._id,
-                        status: Status.OnReview,
-                      })
-                    }
-                  />
-                  <BsPen
-                    className="cursor-pointer border-2"
-                    onClick={() =>
-                      changeProductStatus({
-                        id: product._id,
-                        status: Status.ToEdit,
-                      })
-                    }
-                  />
-                  <RxCross2
-                    className="cursor-pointer border-2"
-                    onClick={() =>
-                      changeProductStatus({
-                        id: product._id,
-                        status: Status.Reject,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            );
-          })}
-        <button onClick={handleGetProducts}>Get products</button>
+          filteredProducts(products, status).map((product: IProduct, index) => (
+            <div
+              key={index}
+              className="flex w-full justify-center items-center"
+            >
+              <TableProductsPage
+                product={product}
+                handleGetProducts={handleGetProducts}
+              />
+            </div>
+          ))}
         <button
-          className="absolute right-10 top-5"
+          className="absolute flex text-gray-400 right-10 top-5"
           onClick={() => clearToken()}
         >
-          Loguot
+          Logout
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
