@@ -209,25 +209,25 @@ const ProductsTable: FC<TableProductsPageProps> = function ({
   return (
     <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
       <Table.Head className="bg-gray-100 dark:bg-gray-700"></Table.Head>
-      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800 ">
-        <Table.Row className="hover:bg-gray-100 dark:hover:bg-gray-700">
+      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100">
+        <Table.Row className="hover:bg-gray-100 dark:hover:bg-neutral-300">
           <Table.Cell className="whitespace-nowrap p-4 pl-[50px] text-sm font-normal text-gray-500 dark:text-gray-400">
-            <div className="text-base font-semibold text-gray-900 dark:text-white">
+            <div className="text-base font-semibold text-gray-900 dark:text-black">
               {product.updatedAt}
             </div>
-            <div className="truncate overflow-hidden inline-block max-w-[400px] text-gray-500 dark:text-gray-400 ">
+            <div className="truncate overflow-hidden inline-block max-w-[400px] text-black-500 dark:text-black-400 ">
               {product.productText}
             </div>
           </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white w-[120px]">
+          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
             {product.status}
           </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white ">
+          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
             {product.userTGId}
           </Table.Cell>
 
           <Table.Cell className="space-x-2 whitespace-nowrap p-4 pr-[50px]">
-            <div className="flex items-center gap-x-3">
+            <div className="group flex h-min items-center justify-center p-0.5 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-lg focus:ring-2">
               <EditProductModal
                 product={product}
                 handleGetProducts={handleGetProducts}

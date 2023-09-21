@@ -179,7 +179,7 @@ const Mainpage: React.FC = () => {
             </div>
           ))}
         <button
-          className="absolute flex text-gray-400 right-10 top-5"
+          className="absolute flex text-gray-400 right-10 top-5 bg-[#002D74] rounded-xl text-white py-2 px-3 hover:scale-105 duration-300"
           onClick={() => clearToken()}
         >
           Logout
