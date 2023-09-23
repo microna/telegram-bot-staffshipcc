@@ -1,9 +1,9 @@
 name: Deploy to Heroku
 
 on:
-    push:
+  push:
     branches:
-      - herokuu
+      - dev
 
 jobs:
    deploy:
