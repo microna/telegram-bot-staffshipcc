@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const axiosPrivate = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: process.env.REACT_APP_BACKEND_URL || '/',
 });
 
 axiosPrivate.interceptors.request.use((config) => {
