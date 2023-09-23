@@ -1,6 +1,6 @@
 const { mainButtons, productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
-const { saveProductGeneral } = require('../../Storages/ProductGeneral');
+const { saveProductGeneral } = require('../../Storages/ProductGeneralStorage');
 
 const info = {
   yourMsg: 'Ваше сообщение отправлено администратору.',

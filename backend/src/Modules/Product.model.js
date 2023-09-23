@@ -1,41 +1,30 @@
 const mongoose = require('mongoose');
 
-const nameObjectSchema = new mongoose.Schema({
-  productName: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  link: {
-    type: String,
-  },
-});
-
 const productSchema = new mongoose.Schema(
   {
-    clientId: {
-      type: Number,
-      required: true,
-    },
-    clientUserName: {
-      type: String,
-    },
     trackNumber: {
       type: String,
+      required: true,
     },
-    name: [nameObjectSchema],
     totalAmount: {
       type: Number,
     },
+    info: {
+      type: String,
+    },
+    userTGId: {
+      type: Number,
+      required: true,
+    },
+    userTGNick: {
+      type: String,
+    },
     status: {
       type: String,
+    },
+    isFilled: {
+      type: Boolean,
+      default: false,
     },
   },
   {

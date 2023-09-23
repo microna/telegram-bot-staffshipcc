@@ -3,7 +3,7 @@ const { Status } = require('../../Components/Status');
 const {
   getProductsGeneralByStatus,
   updateProductGeneral,
-} = require('../../Storages/ProductGeneral');
+} = require('../../Storages/ProductGeneralStorage');
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
