@@ -29,3 +29,8 @@ echo "Frontend Build Complete"
 echo "Copying Build to Backend Public Folder..."
 cp -r frontend/build/* backend/public/
 echo "Copy Complete"
+
+# Start
+echo "Starting..."
+(cd backend && yarn start:dev)
+echo "Start Complete"
