@@ -21,11 +21,17 @@ export enum Status {
   All = 'All',
 }
 
-const DropdownMenu: React.FC<{
+interface IDropdownMenu {
   setStatus: (status: Status) => void;
   setIsOpenDropDown: (isActive: boolean) => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
-}> = ({ setStatus, setIsOpenDropDown, buttonRef }) => {
+}
+
+const DropdownMenu: React.FC<IDropdownMenu> = ({
+  setStatus,
+  setIsOpenDropDown,
+  buttonRef,
+}) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -179,7 +185,7 @@ const Mainpage: React.FC = () => {
             </div>
           ))}
         <button
-          className="absolute flex text-gray-400 right-10 top-5 bg-[#002D74] rounded-xl text-white py-2 px-3 hover:scale-105 duration-300"
+          className="absolute flex text-gray-400 right-10 top-5"
           onClick={() => clearToken()}
         >
           Logout

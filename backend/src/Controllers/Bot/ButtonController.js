@@ -1,12 +1,17 @@
 const { mainButtons, productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
-const { saveProductGeneral } = require('../../Storages/ProductGeneralStorage');
+const { saveProducboteneral } = require('../../Storages/ProductGeneralStorage');
+const {
+  saveProduct,
+  updateProductTotalAmount,
+  updateProductInfo,
+} = require('../../Storages/ProductStorage');
 
 const info = {
   yourMsg: 'Ваше сообщение отправлено администратору.',
   recipient: 'отримувач',
 };
-
+let states = {};
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
   bot.on('text', async (msg) => {
@@ -15,13 +20,13 @@ module.exports = (app, bot) => {
       const product = {
         productText: text,
         status: Status.New,
-        userTGId: from.id,
+        userbotId: from.id,
       };
-      const result = await saveProductGeneral(product);
+      const result = await saveProducboteneral(product);
       await bot.sendMessage(chat.id, info.yourMsg, {
         reply_markup: {
-          keyboard: [['Редактировать посилку', 'На главную']],
-          resize_keyboard: true,
+          keyboard: [['На главную']],
+          resize_keyboard: false,
         },
       });
 
@@ -39,22 +44,102 @@ module.exports = (app, bot) => {
         },
       );
     }
-    if (msg.text === 'Додати посилку' || msg.text === 'Редактировать посилку') {
-      await bot.sendMessage(
-        chat.id,
-        `
-        Вам нужно написать о товаре в таком виде:
-        Отримувач - Віктор Чернусь
-        +380973180575
-        
-        NP20000002685128NPG
-        
-        
-        New Balance 1906R - 110 євро - 4 пари
-        https://www.jdsports.de/product/grau-new-balance-1906r-damen/19286423_jdsportsde/`,
-        {},
-      );
+
+    const exitButton = 'Вийти з додавання';
+    console.log(states);
+    if (msg.text === exitButton) {
+      delete states[msg.from.id];
+      delete states[msg.from.id + `tracknumber`];
+      // states[msg.chat.id] = 0;
     }
+    if (msg.text === 'Додати посилку') {
+      bot
+        .sendMessage(msg.from.id, 'Введіть трек намбер: ', {
+          reply_to_message_id: msg.message_id,
+          reply_markup: {
+            force_reply: true,
+            selective: true,
+          },
+        })
+        .then(() => {
+          states[msg.from.id] = 1;
+        });
+    }
+
+    if (states[msg.from.id] == 1) {
+      const result = await saveProduct({
+        trackNumber: msg.text,
+        userTGId: msg.from.id,
+        userTGNick: msg.from.username,
+      });
+
+      if (result) {
+        bot
+          .sendMessage(msg.from.id, 'Введіть емаунт: ', {
+            reply_to_message_id: msg.message_id,
+            reply_markup: {
+              force_reply: true,
+              selective: true,
+            },
+          })
+          .then(() => {
+            states[msg.from.id] = 2;
+            states[msg.from.id + `tracknumber`] = msg.text;
+          });
+      } else {
+        bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
+        delete states[msg.from.id];
+      }
+    }
+    if (states[msg.from.id] == 2) {
+      const result = await updateProductTotalAmount({
+        userTGId: msg.from.id,
+        trackNumber: states[msg.from.id + `tracknumber`],
+        totalAmount: msg.text,
+      });
+      if (result) {
+        bot
+          .sendMessage(msg.from.id, 'Введіть інфо: ', {
+            reply_to_message_id: msg.message_id,
+            reply_markup: {
+              force_reply: true,
+              selective: true,
+            },
+          })
+          .then(() => {
+            states[msg.from.id] = 3;
+          });
+      } else {
+        bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
+        delete states[msg.from.id];
+      }
+    }
+    if (states[msg.from.id] == 3) {
+      const result = await updateProductInfo({
+        userTGId: msg.from.id,
+        trackNumber: states[msg.from.id + `tracknumber`],
+        info: msg.text,
+      });
+      if (result) {
+        bot
+          .sendMessage(msg.from.id, 'Посилка додана! Чекайте відповідьи ', {
+            reply_to_message_id: msg.message_id,
+            reply_markup: {
+              force_reply: true,
+              selective: true,
+            },
+          })
+          .then(() => {
+            delete states[msg.from.id];
+            delete states[msg.from.id + `tracknumber`];
+            // states[msg.chat.id] = 0;
+          });
+      } else {
+        bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
+        delete states[msg.from.id];
+      }
+    }
+
     if (msg.text === '🤑Тарифы') {
       await bot.sendMessage(chat.id, `TODO Информация по тарифам...`, {
         parse_mode: 'HTML',
