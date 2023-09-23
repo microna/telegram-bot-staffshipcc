@@ -46,7 +46,7 @@ jobs:
            run: |
               if [ ${{ github.event.inputs.branch }} == 'main' ]; then
                 heroku pipelines:promote -a staffshipcc-bot-prod
-              elif [ ${{ github.event.inputs.branch }} == 'dev' ]; then
+              elif [ ${{ github.event.inputs.branch }} == 'herokuu' ]; then
                 heroku pipelines:promote -a staffshipcc-development-bot
               elif [ ${{ github.event.inputs.branch }} == 'staging' ]; then
                 heroku pipelines:promote -a staffshipcc-staging-bot
