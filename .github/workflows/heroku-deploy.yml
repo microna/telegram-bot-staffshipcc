@@ -1,11 +1,9 @@
 name: Deploy to Heroku
 
 on:
-   workflow_dispatch:
-      inputs:
-         branch:
-            description: 'Branch to deploy'
-            required: true
+  push:
+    branches:
+      - herokuu
 
 jobs:
    deploy:
@@ -46,13 +44,11 @@ jobs:
 
          - name: Deploy to Heroku
            run: |
-              if [ ${{ github.event.inputs.branch }} == 'main' ]; then
-                heroku pipelines:promote -a staffshipcc-bot-prod
-              elif [ ${{ github.event.inputs.branch }} == 'dev' ]; then
-                heroku pipelines:promote -a staffshipcc-development-bot
-              elif [ ${{ github.event.inputs.branch }} == 'staging' ]; then
-                heroku pipelines:promote -a staffshipcc-staging-bot
-              fi
+              heroku pipelines:promote -a staffshipcc-development-bot
+
+         - name: Restart Heroku App
+           run: |
+              heroku restart -a staffshipcc-development-bot
            env:
               HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
               HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
