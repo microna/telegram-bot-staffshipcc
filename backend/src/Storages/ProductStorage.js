@@ -1,3 +1,4 @@
+const { Status } = require('../Components/Status.js');
 const ProductModel = require('../Modules/Product.model.js');
 
 const saveProduct = async ({
@@ -6,7 +7,7 @@ const saveProduct = async ({
   info = '',
   userTGId,
   userTGNick,
-  status,
+  status = Status.New,
 }) => {
   try {
     const newProduct = {
