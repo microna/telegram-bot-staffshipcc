@@ -12,8 +12,6 @@ jobs:
       steps:
          - name: Checkout code
            uses: actions/checkout@v2
-          
-         - uses: CDNievas/heroku-action@v1.0 # This is the action
 
          - name: Set up Node.js
            uses: actions/setup-node@v2
