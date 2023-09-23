@@ -5,10 +5,10 @@ const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const {
-  getAllProducts,
   updateProductGeneral,
-  getProductById,
-} = require('./src/Storages/ProductGeneral');
+  getAllProductsGeneral,
+  getProductGeneralById,
+} = require('./src/Storages/ProductGeneralStorage');
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 
@@ -37,7 +37,7 @@ require('./src/Controllers/Bot/AdminController')(app, bot);
 require('./src/Controllers/Bot/ButtonController')(app, bot);
 
 app.get('/products', checkAuth, async (req, res) => {
-  const products = await getAllProducts();
+  const products = await getAllProductsGeneral();
   res.json(products);
 });
 
@@ -50,7 +50,7 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
   try {
     const { id, status, message } = req.body;
     const result = await updateProductGeneral({ id, status, message });
-    const product = await getProductById({ id });
+    const product = await getProductGeneralById({ id });
     const textAnswer = `Product: ${product.productText} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
     if (result) {
       await bot.sendMessage(+product.userTGId, textAnswer, {});
