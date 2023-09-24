@@ -49,8 +49,7 @@ module.exports = (app, bot) => {
     console.log(states);
     if (msg.text === exitButton) {
       delete states[msg.from.id];
-      delete states[msg.from.id + `tracknumber`];
-      // states[msg.chat.id] = 0;
+      delete states[msg.from.id + `id`];
     }
     if (msg.text === 'Додати посилку') {
       bot
@@ -84,17 +83,17 @@ module.exports = (app, bot) => {
           })
           .then(() => {
             states[msg.from.id] = 2;
-            states[msg.from.id + `tracknumber`] = msg.text;
+            states[msg.from.id + `id`] = result._id.toString();
           });
       } else {
         bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
         delete states[msg.from.id];
+        delete states[msg.from.id + `id`];
       }
     }
     if (states[msg.from.id] == 2) {
       const result = await updateProductTotalAmount({
-        userTGId: msg.from.id,
-        trackNumber: states[msg.from.id + `tracknumber`],
+        _id: states[msg.from.id + `id`],
         totalAmount: msg.text,
       });
       if (result) {
@@ -112,12 +111,12 @@ module.exports = (app, bot) => {
       } else {
         bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
         delete states[msg.from.id];
+        delete states[msg.from.id + `id`];
       }
     }
     if (states[msg.from.id] == 3) {
       const result = await updateProductInfo({
-        userTGId: msg.from.id,
-        trackNumber: states[msg.from.id + `tracknumber`],
+        _id: states[msg.from.id + `id`],
         info: msg.text,
       });
       if (result) {
@@ -131,12 +130,13 @@ module.exports = (app, bot) => {
           })
           .then(() => {
             delete states[msg.from.id];
-            delete states[msg.from.id + `tracknumber`];
+            delete states[msg.from.id + `id`];
             // states[msg.chat.id] = 0;
           });
       } else {
         bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
         delete states[msg.from.id];
+        delete states[msg.from.id + `id`];
       }
     }
 

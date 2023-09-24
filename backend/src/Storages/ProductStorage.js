@@ -45,15 +45,11 @@ const updateProductStatus = async ({ _id, trackNumber, status }) => {
   }
 };
 
-const updateProductTotalAmount = async ({ userTGId, trackNumber, totalAmount }) => {
+const updateProductTotalAmount = async ({ _id, totalAmount }) => {
   try {
-    const clientProducts = await ProductModel.find({ userTGId });
-    const currentUserProduct = clientProducts.find(
-      (product) => product.trackNumber === trackNumber,
-    );
     const result = await ProductModel.findOneAndUpdate(
       {
-        _id: currentUserProduct._id,
+        _id,
       },
       {
         totalAmount,
@@ -65,15 +61,11 @@ const updateProductTotalAmount = async ({ userTGId, trackNumber, totalAmount }) 
   }
 };
 
-const updateProductInfo = async ({ userTGId, trackNumber, info }) => {
+const updateProductInfo = async ({ _id, info }) => {
   try {
-    const clientProducts = await ProductModel.find({ userTGId });
-    const currentUserProduct = clientProducts.find(
-      (product) => product.trackNumber === trackNumber,
-    );
     const result = await ProductModel.findOneAndUpdate(
       {
-        _id: currentUserProduct._id,
+        _id,
       },
       {
         info,
