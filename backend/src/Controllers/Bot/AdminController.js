@@ -5,6 +5,7 @@ const {
   getProductsByStatus,
   updateProduct,
 } = require('../../Storages/ProductStorage');
+const { changeProductText } = require('../../utils/changeProductText');
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
@@ -40,7 +41,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}`;
+            const productText = changeProductText(product);
 
             // Create a unique callback data for each product
             const callbackData = `${product._id}`;
@@ -87,7 +88,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}\nкомментарии администратора: \n${product.comments}`;
+            const productText = changeProductText(product);
 
             bot.sendMessage(adminId, productText, {
               reply_markup: {},
@@ -104,7 +105,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}`;
+            const productText = changeProductText(product);
 
             bot.sendMessage(adminId, productText, {
               reply_markup: {},
@@ -120,7 +121,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}`;
+            const productText = changeProductText(product);
 
             // Create a unique callback data for each product
 
@@ -140,7 +141,7 @@ module.exports = (app, bot) => {
             });
           }
           result.forEach((product) => {
-            const productText = `${product.productText}\n${product.updatedAt}`;
+            const productText = changeProductText(product);
 
             bot.sendMessage(adminId, productText, {
               reply_markup: {},
