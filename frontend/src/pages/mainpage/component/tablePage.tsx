@@ -169,7 +169,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           )}
         </div>
 
-        <Label className="mt-3 ml-6">{product.productText}</Label>
+        <Label className="mt-3 ml-6">{product.info}</Label>
         <Modal.Body>
           <form>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -216,14 +216,26 @@ const ProductsTable: FC<TableProductsPageProps> = function ({
               {product.updatedAt}
             </div>
             <div className="truncate overflow-hidden inline-block max-w-[400px] text-black-500 dark:text-black-400 ">
-              {product.productText}
+              {product.info}
             </div>
           </Table.Cell>
           <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
             {product.status}
           </Table.Cell>
           <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
-            {product.userTGId}
+            {product.trackNumber}
+          </Table.Cell>
+          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+            <a
+              className="text-blue-900"
+              href={`https://t.me/${product.userTGNick}`}
+              target="_blank"
+            >
+              {product.userTGNick}
+            </a>
+          </Table.Cell>
+          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+            {product.totalAmount}
           </Table.Cell>
 
           <Table.Cell className="space-x-2 whitespace-nowrap p-4 pr-[50px]">
