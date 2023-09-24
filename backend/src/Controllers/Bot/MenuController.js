@@ -1,27 +1,43 @@
 const { mainButtons, adminButtons } = require('../../Components/Buttons');
+const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
 module.exports = (app, bot) => {
   try {
     const adminId = process.env.ADMIN_ID;
     bot.on('text', async (msg) => {
       if (msg.text === '/menu') {
-        await bot.sendMessage(msg.chat.id, `Меню бота`, {
-          reply_markup: {
-            keyboard: mainButtons,
-            resize_keyboard: true,
+        await sendMessageToUser({
+          bot,
+          userId: msg.chat.id,
+          message: `Меню бота`,
+          options: {
+            reply_markup: {
+              keyboard: mainButtons,
+              resize_keyboard: true,
+            },
           },
         });
       }
 
       if (msg.text === '/help') {
-        await bot.sendMessage(msg.chat.id, `TODO Связаться с администрацией`);
+        await sendMessageToUser({
+          bot,
+          userId: msg.chat.id,
+          message: `TODO Связаться с администрацией`,
+          options: {},
+        });
       }
       if (+msg.from.id === +adminId) {
         if (msg.text == '/admin') {
-          await bot.sendMessage(msg.chat.id, `Заказы`, {
-            reply_markup: {
-              keyboard: adminButtons,
-              resize_keyboard: true,
+          await sendMessageToUser({
+            bot,
+            userId: msg.chat.id,
+            message: `Заказы`,
+            options: {
+              reply_markup: {
+                keyboard: adminButtons,
+                resize_keyboard: true,
+              },
             },
           });
         }

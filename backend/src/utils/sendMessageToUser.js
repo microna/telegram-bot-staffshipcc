@@ -1,13 +1,10 @@
-const sendMessageToUser = async ({ bot, userId, message }) => {
+const { sendMessageToAdmin } = require('./sendMessageToAdmin');
+const sendMessageToUser = async ({ bot, userId, userTGNick = '', message, options }) => {
   try {
-    await bot.sendMessage(userId, `${message} `, {
-      reply_markup: {
-        force_reply: true,
-      },
-    });
+    await bot.sendMessage(userId, `${message} `, options);
     return true;
   } catch (e) {
-    console.log('chat with user not found');
+    sendMessageToAdmin({ bot, userTGNick });
   }
 };
 

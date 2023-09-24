@@ -1,5 +1,6 @@
 const { Status } = require('../Components/Status.js');
 const ProductModel = require('../Modules/Product.model.js');
+const { formatDate } = require('../utils/formatDate.js');
 
 const saveProduct = async ({
   trackNumber,
@@ -111,9 +112,15 @@ const getProductById = async ({ id }) => {
 
 const getAllProducts = async () => {
   try {
-    const product = await ProductModel.find();
+    const products = await ProductModel.find();
 
-    return product;
+    return products.map((product) => {
+      return {
+        ...product.toObject(),
+        updatedAt: formatDate(product.updatedAt),
+        createdAt: formatDate(product.createdAt),
+      };
+    });
   } catch (error) {
     console.log('err get all products');
   }
