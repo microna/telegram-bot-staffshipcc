@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
-import TableProductsPage from 'pages/mainpage/component/tablePage';
+import { ProductsTable } from 'pages/mainpage/component/tablePage';
+import { Table } from 'flowbite-react';
 
 export interface IProduct {
   _id: string;
@@ -133,7 +134,7 @@ const Mainpage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <div className="w-[80%] m-auto  mb-[100px] mt-[100px]">
         <div className="mb-4  flex w-full justify-between">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
@@ -179,18 +180,42 @@ const Mainpage: React.FC = () => {
             )}
           </div>
         </div>
-        {products &&
-          filteredProducts(products, status).map((product: IProduct, index) => (
-            <div
-              key={index}
-              className="flex w-full justify-center items-center"
-            >
-              <TableProductsPage
-                product={product}
-                handleGetProducts={handleGetProducts}
-              />
-            </div>
-          ))}
+        <Table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+          <Table.Head className="group/head text-xs uppercase bg-gray-50">
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              Date
+            </Table.HeadCell>
+
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              Product Info
+            </Table.HeadCell>
+
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              Status
+            </Table.HeadCell>
+
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              Track Number
+            </Table.HeadCell>
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              TG Nick
+            </Table.HeadCell>
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
+              Price
+            </Table.HeadCell>
+            <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 "></Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="w-full divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100">
+            {products &&
+              filteredProducts(products, status).map((product: IProduct) => (
+                <ProductsTable
+                  product={product}
+                  key={product._id}
+                  handleGetProducts={handleGetProducts}
+                />
+              ))}
+          </Table.Body>
+        </Table>
         <button
           className="absolute flex text-gray-400 right-10 top-5"
           onClick={() => clearToken()}
