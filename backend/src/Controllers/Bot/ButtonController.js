@@ -6,6 +6,7 @@ const {
   updateProductTotalAmount,
   updateProductInfo,
 } = require('../../Storages/ProductStorage');
+const { changeProductText } = require('../../utils/changeProductText');
 
 const info = {
   yourMsg: 'Ваше сообщение отправлено администратору.',
@@ -36,7 +37,8 @@ module.exports = (app, bot) => {
       const id = result._id.toString().replace(/ObjectId\("|"\)/g, '');
       await bot.sendMessage(
         adminId,
-        `ID: \n${id} \nСообщение: \n${product.productText} \nСтатус: \n${Status.New}`,
+        // `ID: \n${id} \nСообщение: \n${product.productText} \nСтатус: \n${Status.New}`,
+        changeProductText(product),
         {
           reply_markup: {
             inline_keyboard: [...productButtons(id, Status)],
