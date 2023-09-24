@@ -4,13 +4,10 @@ const express = require('express');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const {
-  updateProductGeneral,
-  getProductGeneralById,
-} = require('./src/Storages/ProductGeneralStorage');
+
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
-const { getAllProducts } = require('./src/Storages/ProductStorage');
+const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -49,9 +46,9 @@ app.get('/adduser', async (req, res) => {
 app.patch('/changeProductStatus', checkAuth, async (req, res) => {
   try {
     const { id, status, message } = req.body;
-    const result = await updateProductGeneral({ id, status, message });
-    const product = await getProductGeneralById({ id });
-    const textAnswer = `Product: ${product.productText} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
+    const result = await updateProduct({ id, status, message });
+    const product = await getProductById({ id });
+    const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n Info: ${product.info} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
     if (result) {
       await bot.sendMessage(+product.userTGId, textAnswer, {});
       await bot.sendMessage(+adminId, textAnswer, {});
