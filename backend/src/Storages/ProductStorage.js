@@ -21,7 +21,7 @@ const saveProduct = async ({
     const result = await new ProductModel(newProduct).save();
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('saveProduct error');
   }
 };
 
@@ -38,19 +38,15 @@ const updateProduct = async ({ id, status, message = '' }) => {
     );
     return product;
   } catch (error) {
-    console.log(error);
+    console.log('updateProduct error');
   }
 };
 
-const updateProductStatus = async ({ _id, trackNumber, status }) => {
+const updateProductStatus = async ({ _id, status }) => {
   try {
-    const clientProducts = await ProductModel.find({ _id });
-    const currentUserProduct = clientProducts.find(
-      (product) => product.trackNumber === trackNumber,
-    );
     const result = await ProductModel.findOneAndUpdate(
       {
-        _id: currentUserProduct._id,
+        _id,
       },
       {
         status,
@@ -58,7 +54,7 @@ const updateProductStatus = async ({ _id, trackNumber, status }) => {
     );
     return result;
   } catch (error) {
-    console.log(error);
+    console.log('updateProductStatus error');
   }
 };
 
@@ -100,7 +96,7 @@ const getProductsByStatus = async ({ status }) => {
     const products = await ProductModel.find({ status });
     return products.sort((a, b) => a.updatedAt - b.updatedAt);
   } catch (error) {
-    console.log(error);
+    console.log('getProductsByStatus error');
   }
 };
 
