@@ -1,6 +1,13 @@
 /* eslint-disable */
 import { ChangeEvent } from 'react';
-import { Button, Label, Modal, Table, Textarea } from 'flowbite-react';
+import {
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  Table,
+  Textarea,
+} from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';
@@ -28,28 +35,6 @@ const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   } catch (e) {
     console.log('error login');
   }
-};
-
-const TableProductsPage: FC<TableProductsPageProps> = function ({
-  product,
-  handleGetProducts,
-}) {
-  return (
-    <>
-      <div className="flex flex-col">
-        <div className="overflow-x-auto">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden shadow">
-              <ProductsTable
-                product={product}
-                handleGetProducts={handleGetProducts}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
 };
 
 //TODO if needed. Add search product
@@ -99,11 +84,20 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         <HiPencilAlt className="mr-2 text-lg" />
         Answer
       </Button>
-      <Modal className="" onClose={() => setOpen(false)} show={isOpen}>
-        <Modal.Header className="border-b border-gray-200 !p-6 dark:border-gray-700">
+      <Modal onClose={() => setOpen(false)} show={isOpen}>
+        <Modal.Header className="bg-white-100 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
             <span className="mx-5"> Answer product.</span> User:{' '}
-            <span className="text-gray-400">{product.userTGId}</span>
+            <span className="text-gray-400">
+              {' '}
+              <a
+                className=""
+                href={`https://t.me/${product.userTGNick}`}
+                target="_blank"
+              >
+                {product.userTGNick}
+              </a>
+            </span>
             <span className="ml-5">Status: </span>
             <span className="text-gray-400">{product.status}</span>
           </strong>
@@ -111,7 +105,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         <div className="relative">
           <div className="flex gap-5">
             <Button
-              className="w-[10%] ml-7 bg-gray-100 text-lg"
+              className="w-[10%] ml-7 bg-blue-100 text-lg"
               color="primary"
               onClick={() => setIsOpenDropDown(!isOpenDropDown)}
             >
@@ -119,7 +113,6 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
             </Button>
             <Label>Status: {status}</Label>
           </div>
-
           {isOpenDropDown && (
             <div
               className="w-[10%] absolute left-[30px] bg-gray-100 py-1"
@@ -188,13 +181,13 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
             </div>
           </form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="justify-center">
           <Button
-            className="w-full bg-gray-400 text-lg m-[10px]"
+            className="w-[200px] bg-blue-400 text-lg m-[10px]"
             color="primary"
             onClick={() => handleChangeProductStatus()}
           >
-            Change status
+            Submit Form
           </Button>
         </Modal.Footer>
       </Modal>
@@ -202,55 +195,49 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   );
 };
 
-const ProductsTable: FC<TableProductsPageProps> = function ({
+export const ProductsTable: FC<TableProductsPageProps> = function ({
   product,
   handleGetProducts,
 }) {
   return (
-    <Table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-      <Table.Head className="bg-gray-100 dark:bg-gray-700"></Table.Head>
-      <Table.Body className="divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100">
-        <Table.Row className="hover:bg-gray-100 dark:hover:bg-neutral-300">
-          <Table.Cell className="whitespace-nowrap p-4 pl-[50px] text-sm font-normal text-gray-500 dark:text-gray-400">
-            <div className="text-base font-semibold text-gray-900 dark:text-black">
-              {product.updatedAt}
-            </div>
-            <div className="truncate overflow-hidden inline-block max-w-[400px] text-black-500 dark:text-black-400 ">
-              {product.info}
-            </div>
-          </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
-            {product.status}
-          </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
-            {product.trackNumber}
-          </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
-            <a
-              className="text-blue-900"
-              href={`https://t.me/${product.userTGNick}`}
-              target="_blank"
-            >
-              {product.userTGNick}
-            </a>
-          </Table.Cell>
-          <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
-            {product.totalAmount}
-          </Table.Cell>
+    <Table.Row
+      key={product._id}
+      className="w-full hover:bg-gray-100 dark:hover:bg-neutral-300"
+    >
+      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+        {product.updatedAt}
+      </Table.Cell>
+      <Table.Cell className="truncate overflow-hidden max-w-[200px] font-medium whitespace-nowrap p-4">
+        {product.info}
+      </Table.Cell>
+      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
+        {product.status}
+      </Table.Cell>
+      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+        {product.trackNumber}
+      </Table.Cell>
+      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+        <a
+          className="text-blue-900"
+          href={`https://t.me/${product.userTGNick}`}
+          target="_blank"
+        >
+          {product.userTGNick}
+        </a>
+      </Table.Cell>
+      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+        {product.totalAmount}
+      </Table.Cell>
 
-          <Table.Cell className="space-x-2 whitespace-nowrap p-4 pr-[50px]">
-            <div className="group flex h-min items-center justify-center p-0.5 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-lg focus:ring-2">
-              <EditProductModal
-                product={product}
-                handleGetProducts={handleGetProducts}
-              />
-              {/* <DeleteProductModal product={product} /> */}
-            </div>
-          </Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table>
+      <Table.Cell className="space-x-2 whitespace-nowrap p-4 pr-[50px]">
+        <div className="group flex h-min items-center justify-center p-0.5 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-lg focus:ring-2">
+          <EditProductModal
+            product={product}
+            handleGetProducts={handleGetProducts}
+          />
+          {/* <DeleteProductModal product={product} /> */}
+        </div>
+      </Table.Cell>
+    </Table.Row>
   );
 };
-
-export default TableProductsPage;
