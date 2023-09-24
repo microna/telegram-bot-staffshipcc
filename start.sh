@@ -30,7 +30,12 @@ echo "Copying Build to Backend Public Folder..."
 cp -r frontend/build/* backend/public/
 echo "Copy Complete"
 
-# Start
-echo "Starting..."
-(cd backend && yarn start:dev)
-echo "Start Complete"
+# Install PM2 globally
+echo "Installing PM2 globally..."
+npm install -g pm2
+echo "PM2 Installed"
+
+# Start Node.js server with PM2
+echo "Starting Node.js server with PM2..."
+(cd backend && pm2 start "yarn start")
+echo "Node.js server started with PM2"
