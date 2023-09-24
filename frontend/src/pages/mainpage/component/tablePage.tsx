@@ -1,13 +1,6 @@
 /* eslint-disable */
 import { ChangeEvent } from 'react';
-import {
-  Button,
-  Checkbox,
-  Label,
-  Modal,
-  Table,
-  Textarea,
-} from 'flowbite-react';
+import { Button, Label, Modal, Table, Textarea } from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';

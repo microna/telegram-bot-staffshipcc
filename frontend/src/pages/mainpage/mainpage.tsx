@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
-import { Checkbox, Table } from 'flowbite-react';
+import { Table } from 'flowbite-react';
 
 export interface IProduct {
   _id: string;
