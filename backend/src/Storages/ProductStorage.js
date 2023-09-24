@@ -25,6 +25,23 @@ const saveProduct = async ({
   }
 };
 
+const updateProduct = async ({ id, status, message = '' }) => {
+  try {
+    const product = await ProductModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        status,
+        comments: message,
+      },
+    );
+    return product;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const updateProductStatus = async ({ _id, trackNumber, status }) => {
   try {
     const clientProducts = await ProductModel.find({ _id });
@@ -114,4 +131,5 @@ module.exports = {
   getProductsByStatus,
   getProductById,
   getAllProducts,
+  updateProduct,
 };

@@ -1,10 +1,10 @@
 const { productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
 const {
-  getProductsGeneralByStatus,
-  updateProductGeneral,
-} = require('../../Storages/ProductGeneralStorage');
-const { updateProductStatus } = require('../../Storages/ProductStorage');
+  updateProductStatus,
+  getProductsByStatus,
+  updateProduct,
+} = require('../../Storages/ProductStorage');
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
@@ -33,7 +33,7 @@ module.exports = (app, bot) => {
 
         if (msg.text == '🛠Заказы в работе') {
           const status = Status.OnReview;
-          const result = await getProductsGeneralByStatus({ status });
+          const result = await getProductsByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
               reply_markup: {},
@@ -80,7 +80,7 @@ module.exports = (app, bot) => {
 
         if (msg.text == '📌Заказы на доработку') {
           const status = Status.ToEdit;
-          const result = await getProductsGeneralByStatus({ status });
+          const result = await getProductsByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
               reply_markup: {},
@@ -97,7 +97,7 @@ module.exports = (app, bot) => {
 
         if (msg.text == '❌Отмененные заказы') {
           const status = Status.Reject;
-          const result = await getProductsGeneralByStatus({ status });
+          const result = await getProductsByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
               reply_markup: {},
@@ -113,7 +113,7 @@ module.exports = (app, bot) => {
         }
         if (msg.text == '✅Новие закази') {
           const status = Status.New;
-          const result = await getProductsGeneralByStatus({ status });
+          const result = await getProductsByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
               reply_markup: {},
@@ -133,7 +133,7 @@ module.exports = (app, bot) => {
         }
         if (msg.text == '🧙🏼‍♂️Архив') {
           const status = Status.Archive;
-          const result = await getProductsGeneralByStatus({ status });
+          const result = await getProductsByStatus({ status });
           if (result.length <= 0) {
             bot.sendMessage(adminId, 'Пусто', {
               reply_markup: {},
@@ -159,7 +159,7 @@ module.exports = (app, bot) => {
       const [productId, action] = data.split(':');
       console.log(action);
       const changeProductStatus = async ({ id, status, message }) => {
-        const result = await updateProductGeneral({ status, id });
+        const result = await updateProduct({ status, id });
         if (status !== Status.Archive) {
           await bot.sendMessage(result.userTGId, `${message} \n${result.productText}`, {
             reply_markup: {
