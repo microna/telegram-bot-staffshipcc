@@ -1,9 +1,6 @@
 const { productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
-const {
-  getProductsByStatus,
-  updateProduct,
-} = require('../../Storages/ProductStorage');
+const { getProductsByStatus, updateProduct } = require('../../Storages/ProductStorage');
 const { changeProductText } = require('../../utils/changeProductText');
 const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
@@ -15,85 +12,67 @@ module.exports = (app, bot) => {
       try {
         const { from } = msg;
         if (+from.id === +adminId) {
-          // if (msg.text.toString().includes(Status.Reject)) {
-          //   const status = Status.Reject;
-          //   // const { text } = msg;
-          //   const result = await updateProductStatus({
-          //     id: '',
-          //     status,
-          //   });
-          //   bot.sendMessage(
-          //     result.userTGId,
-          //     `Админ отменил вашу посылку: \n${result.trackNumber} По причине: ${''}`,
-          //     {
-          //       reply_markup: {},
-          //     },
-          //   );
-          //   bot.sendMessage(adminId, 'Сообщение пользователю отправлено', {
-          //     reply_markup: {},
-          //   });
-          // }
-
           if (msg.text == '🛠Заказы в работе') {
             const status = Status.OnReview;
             const result = await getProductsByStatus({ status });
             if (result.length <= 0) {
-              bot.sendMessage(adminId, 'Пусто', {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: 'Пусто',
+                options: {},
               });
             }
-            result.forEach((product) => {
+            result.forEach(async (product) => {
               const productText = changeProductText(product);
 
               // Create a unique callback data for each product
               const callbackData = `${product._id}`;
 
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {
-                  inline_keyboard: [
-                    ...productButtons(product._id, Status),
-                    product.status === Status.OnReview && [
-                      {
-                        text: 'В архив',
-                        callback_data: `${callbackData}:${Status.Archive}`,
-                      },
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: productText,
+                options: {
+                  reply_markup: {
+                    inline_keyboard: [
+                      ...productButtons(product._id, Status),
+                      product.status === Status.OnReview && [
+                        {
+                          text: 'В архив',
+                          callback_data: `${callbackData}:${Status.Archive}`,
+                        },
+                      ],
                     ],
-                  ],
+                  },
                 },
               });
             });
           }
 
-          // if (msg.text == 'Заказы в работе') {
-          //   const status = Status.OnReview;
-          //   const result = await getProductsGeneralByStatus({ status });
-          //   if (result.length <= 0) {
-          //     bot.sendMessage(adminId, 'Пусто', {
-          //       reply_markup: {},
-          //     });
-          //   }
-          //   result.forEach((product) => {
-          //     const productText = `${product.productText}\n${product.updatedAt}`;
-
-          //     bot.sendMessage(adminId, productText, {
-          //       reply_markup: {},
-          //     });
-          //   });
-          // }
-
           if (msg.text == '📌Заказы на доработку') {
             const status = Status.ToEdit;
             const result = await getProductsByStatus({ status });
             if (result.length <= 0) {
-              bot.sendMessage(adminId, 'Пусто', {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: 'Пусто',
+                options: {},
               });
             }
-            result.forEach((product) => {
+            result.forEach(async (product) => {
               const productText = changeProductText(product);
 
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: productText,
+                options: {
+                  reply_markup: {
+                    inline_keyboard: [...productButtons(product._id, Status)],
+                  },
+                },
               });
             });
           }
@@ -102,15 +81,25 @@ module.exports = (app, bot) => {
             const status = Status.Reject;
             const result = await getProductsByStatus({ status });
             if (result.length <= 0) {
-              bot.sendMessage(adminId, 'Пусто', {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: 'Пусто',
+                options: {},
               });
             }
-            result.forEach((product) => {
+            result.forEach(async (product) => {
               const productText = changeProductText(product);
 
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: productText,
+                options: {
+                  reply_markup: {
+                    inline_keyboard: [...productButtons(product._id, Status)],
+                  },
+                },
               });
             });
           }
@@ -118,18 +107,25 @@ module.exports = (app, bot) => {
             const status = Status.New;
             const result = await getProductsByStatus({ status });
             if (result.length <= 0) {
-              bot.sendMessage(adminId, 'Пусто', {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: 'Пусто',
+                options: {},
               });
             }
-            result.forEach((product) => {
+            result.forEach(async (product) => {
               const productText = changeProductText(product);
 
               // Create a unique callback data for each product
-
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {
-                  inline_keyboard: [...productButtons(product._id, Status)],
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: productText,
+                options: {
+                  reply_markup: {
+                    inline_keyboard: [...productButtons(product._id, Status)],
+                  },
                 },
               });
             });
@@ -138,15 +134,24 @@ module.exports = (app, bot) => {
             const status = Status.Archive;
             const result = await getProductsByStatus({ status });
             if (result.length <= 0) {
-              bot.sendMessage(adminId, 'Пусто', {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: 'Пусто',
+                options: {},
               });
             }
-            result.forEach((product) => {
+            result.forEach(async (product) => {
               const productText = changeProductText(product);
-
-              bot.sendMessage(adminId, productText, {
-                reply_markup: {},
+              await sendMessageToUser({
+                bot,
+                userId: adminId,
+                message: productText,
+                options: {
+                  reply_markup: {
+                    inline_keyboard: [...productButtons(product._id, Status)],
+                  },
+                },
               });
             });
           }
@@ -164,29 +169,28 @@ module.exports = (app, bot) => {
         const changeProductStatus = async ({ id, status, message }) => {
           const result = await updateProduct({ status, id });
           if (status !== Status.Archive) {
-            const sendMessage = await sendMessageToUser({
+            await sendMessageToUser({
               bot,
               userId: result.userTGId,
+              userTGNick: result.userTGNick,
               message: `${message} \n${result.trackNumber}`,
             });
-
-            if (!sendMessage) {
-              await sendMessageToUser({
-                bot,
-                userId: adminId,
-                message: 'Пользователь удалил чат с ботом, сообщеніе ему не било доставлено',
-              });
-            }
           }
           if (status === Status.Reject || status === Status.ToEdit) {
             // const id = await getProductById({ id });
-            await bot.sendMessage(
-              adminId,
-              `${id},${status}: Вы изминили статус на ${status}, для посылки ${id}  `,
-              {},
-            );
+            await sendMessageToUser({
+              bot,
+              userId: adminId,
+              message: `${id},${status}: Вы изминили статус на ${status}, для посылки ${id}  `,
+              options: {},
+            });
           } else {
-            await bot.sendMessage(adminId, `Продукт добавлен в статус: ${status}`, {});
+            await sendMessageToUser({
+              bot,
+              userId: adminId,
+              message: `Продукт добавлен в статус: ${status}`,
+              options: {},
+            });
           }
         };
 

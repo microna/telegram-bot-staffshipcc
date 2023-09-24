@@ -26,6 +26,10 @@ const productButtons = (callbackData, status) => {
         text: 'Отмена',
         callback_data: `${callbackData}:${status.Reject}`,
       },
+      {
+        text: 'Архив',
+        callback_data: `${callbackData}:${status.Archive}`,
+      },
     ],
   ];
 };
