@@ -75,16 +75,20 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
     <>
       <Button color="primary" onClick={() => setOpen(!isOpen)}>
         <HiPencilAlt className="mr-2 text-lg" />
-        Answer
+        Edit
       </Button>
-      <Modal onClose={() => setOpen(false)} show={isOpen}>
-        <Modal.Header className="bg-white-100 border-b border-gray-200 !p-6 dark:border-gray-700">
+      <Modal
+        className="bg-gray-900"
+        onClose={() => setOpen(false)}
+        show={isOpen}
+      >
+        <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
-            <span className="mx-5"> Answer product.</span> User:{' '}
-            <span className="text-gray-400">
+            <span className="mx-5"> Edit product.</span> User:{' '}
+            <span className="text-gray-400 text-gray-900">
               {' '}
               <a
-                className=""
+                className="text-blue-900"
                 href={`https://t.me/${product.userTGNick}`}
                 target="_blank"
               >
