@@ -32,6 +32,6 @@ echo "Copy Complete"
 
 # Start
 echo "Starting..."
-(cd backend && yarn start:dev)
+(cd backend && yarn start:prod)
 echo "Start Complete"
 
