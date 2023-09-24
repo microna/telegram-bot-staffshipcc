@@ -4,6 +4,7 @@ const {
   getProductsGeneralByStatus,
   updateProductGeneral,
 } = require('../../Storages/ProductGeneralStorage');
+const { updateProductStatus } = require('../../Storages/ProductStorage');
 
 module.exports = (app, bot) => {
   const adminId = process.env.ADMIN_ID;
@@ -13,21 +14,14 @@ module.exports = (app, bot) => {
       const { from } = msg;
       if (+from.id === +adminId) {
         if (msg.text.toString().includes(Status.Reject)) {
-          const { text } = msg;
-          console.log(text.split(':'));
-          const [product, message] = text.split(':');
-          const [productId, status] = product.split(',');
-
-          console.log(productId, status, message);
-
-          const result = await updateProductGeneral({
-            id: productId,
+          // const { text } = msg;
+          const result = await updateProductStatus({
+            id: '',
             status,
-            adminMessage: message,
           });
           bot.sendMessage(
             result.userTGId,
-            `Админ отменил вашу посылку: \n${result.productText} По причине: ${message}`,
+            `Админ отменил вашу посылку: \n${result.productText} По причине: ${''}`,
             {
               reply_markup: {},
             },

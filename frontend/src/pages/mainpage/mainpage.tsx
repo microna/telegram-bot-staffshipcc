@@ -5,9 +5,13 @@ import TableProductsPage from 'pages/mainpage/component/tablePage';
 
 export interface IProduct {
   _id: string;
-  productText: string;
-  status: string;
+  trackNumber: string;
+  totalAmount: string;
+  userTGNick: string;
   userTGId: number;
+  isFilled: boolean;
+  info: string;
+  status: string;
   comments: string;
   createdAt: string;
   updatedAt: string;
@@ -118,10 +122,13 @@ const Mainpage: React.FC = () => {
   };
 
   const filteredProducts = (products: IProduct[], status: string) => {
+    const isFilledProducts = products.filter(
+      (product) => product.isFilled === true,
+    );
     if (status === Status.All) {
-      return products;
+      return isFilledProducts;
     } else {
-      return products.filter((product) => product.status === status);
+      return isFilledProducts.filter((product) => product.status === status);
     }
   };
 

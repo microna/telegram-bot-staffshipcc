@@ -6,11 +6,11 @@ const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const {
   updateProductGeneral,
-  getAllProductsGeneral,
   getProductGeneralById,
 } = require('./src/Storages/ProductGeneralStorage');
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
+const { getAllProducts } = require('./src/Storages/ProductStorage');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -37,7 +37,7 @@ require('./src/Controllers/Bot/AdminController')(app, bot);
 require('./src/Controllers/Bot/ButtonController')(app, bot);
 
 app.get('/products', checkAuth, async (req, res) => {
-  const products = await getAllProductsGeneral();
+  const products = await getAllProducts();
   res.json(products);
 });
 
