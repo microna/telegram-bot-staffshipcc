@@ -14,14 +14,14 @@ module.exports = (app, bot) => {
       const { from } = msg;
       if (+from.id === +adminId) {
         if (msg.text.toString().includes(Status.Reject)) {
-          const { text } = msg;
+          // const { text } = msg;
           const result = await updateProductStatus({
             id: '',
             status,
           });
           bot.sendMessage(
             result.userTGId,
-            `Админ отменил вашу посылку: \n${result.productText} По причине: ${message}`,
+            `Админ отменил вашу посылку: \n${result.productText} По причине: ${''}`,
             {
               reply_markup: {},
             },

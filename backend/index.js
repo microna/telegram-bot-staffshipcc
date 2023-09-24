@@ -6,7 +6,6 @@ const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const {
   updateProductGeneral,
-  getAllProductsGeneral,
   getProductGeneralById,
 } = require('./src/Storages/ProductGeneralStorage');
 const { checkAuth } = require('./src/utils/checkAuth');
