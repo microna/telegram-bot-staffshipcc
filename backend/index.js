@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
+const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -50,8 +51,18 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
     const product = await getProductById({ id });
     const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n Info: ${product.info} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
     if (result) {
-      await bot.sendMessage(+product.userTGId, textAnswer, {});
-      await bot.sendMessage(+adminId, textAnswer, {});
+      await sendMessageToUser({
+        bot,
+        userId: +product.userTGId,
+        message: textAnswer,
+        options: {},
+      });
+      await sendMessageToUser({
+        bot,
+        userId: +adminId,
+        message: textAnswer,
+        options: {},
+      });
       res.json({ isStatusEdited: true });
     }
   } catch (err) {
@@ -71,4 +82,3 @@ app.get('*', function (req, res) {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });
-
