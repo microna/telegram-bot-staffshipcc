@@ -1,5 +1,7 @@
 node_modules
 .env
 .DS_Store
+backend/combined.log
+backend/error.log
 combined.log
 error.log
