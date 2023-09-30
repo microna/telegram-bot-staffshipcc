@@ -1,7 +1,8 @@
 const { mainButtons, adminButtons } = require('../../Components/Buttons');
+const { dateForErrorLog } = require('../../utils/formatDate');
 const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
-module.exports = (app, bot) => {
+module.exports = (app, bot, logger) => {
   try {
     const adminId = process.env.ADMIN_ID;
     bot.on('text', async (msg) => {
@@ -44,6 +45,7 @@ module.exports = (app, bot) => {
       }
     });
   } catch (e) {
+    logger.error(`${dateForErrorLog()} -- Error open menu`);
     console.log('error menu');
   }
 };

@@ -4,13 +4,14 @@ const {
   updateProductTotalAmount,
   updateProductInfo,
 } = require('../../Storages/ProductStorage');
+const { dateForErrorLog } = require('../../utils/formatDate');
 
 // const info = {
 //   yourMsg: 'Ваше сообщение отправлено администратору.',
 //   recipient: 'отримувач',
 // };
 let states = {};
-module.exports = (app, bot) => {
+module.exports = (app, bot, logger) => {
   try {
     bot.on('text', async (msg) => {
       const { chat } = msg;
@@ -56,6 +57,11 @@ module.exports = (app, bot) => {
               states[msg.from.id + `id`] = result._id.toString();
             });
         } else {
+          logger.error(
+            `${dateForErrorLog()} -- Error save to DB user id: ${msg.from.id} username: ${
+              msg.from.username
+            }`,
+          );
           bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
           delete states[msg.from.id];
           delete states[msg.from.id + `id`];
@@ -79,6 +85,11 @@ module.exports = (app, bot) => {
               states[msg.from.id] = 3;
             });
         } else {
+          logger.error(
+            `${dateForErrorLog()} -- Error update amount to DB user id: ${msg.from.id} username: ${
+              msg.from.username
+            }`,
+          );
           bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
           delete states[msg.from.id];
           delete states[msg.from.id + `id`];
@@ -104,6 +115,11 @@ module.exports = (app, bot) => {
               // states[msg.chat.id] = 0;
             });
         } else {
+          logger.error(
+            `${dateForErrorLog()} -- Error update info to DB user id: ${msg.from.id} username: ${
+              msg.from.username
+            }`,
+          );
           bot.sendMessage(msg.from.id, 'Помилка сейву до ДБ, спробуйте пізніше: ');
           delete states[msg.from.id];
           delete states[msg.from.id + `id`];
@@ -147,6 +163,7 @@ module.exports = (app, bot) => {
       }
     });
   } catch (e) {
+    logger.error(`${dateForErrorLog()} -- Button controller error`);
     console.log('Button controller error');
   }
 };
