@@ -1,6 +1,7 @@
 require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
+const winston = require('winston');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
@@ -9,13 +10,18 @@ const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
 const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
+const { dateForErrorLog } = require('./src/utils/formatDate');
 
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
+    logger.info(`${dateForErrorLog()} -- Connected to MongoDB 🔥`);
     console.log('Connected to MongoDB 🔥');
   })
-  .catch((err) => console.log('db connection error: ', err));
+  .catch((err) => {
+    logger.error(`${dateForErrorLog()} -- Erorr connection to MongoDB`);
+    console.log('db connection error: ', err);
+  });
 
 const PORT = process.env.PORT || 4444;
 
@@ -23,16 +29,28 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 
 const adminId = process.env.ADMIN_ID;
 
-app.use(cors());
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+
+app.use(
+  cors({
+    origin: [process.env.ENVIRONMENT_FRONTEND_DOMAIN, 'http://localhost:3000'],
+  }),
+);
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./src/Controllers/Bot/BotController')(app, bot);
-require('./src/Controllers/Bot/MenuController')(app, bot);
-require('./src/Controllers/Bot/UserController')(app, bot);
-require('./src/Controllers/Bot/AdminController')(app, bot);
-require('./src/Controllers/Bot/ButtonController')(app, bot);
+require('./src/Controllers/Bot/BotController')(app, bot, logger);
+require('./src/Controllers/Bot/MenuController')(app, bot, logger);
+require('./src/Controllers/Bot/AdminController')(app, bot, logger);
+require('./src/Controllers/Bot/ButtonController')(app, bot, logger);
 
 app.get('/products', checkAuth, async (req, res) => {
   const products = await getAllProducts();

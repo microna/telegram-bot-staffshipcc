@@ -1,3 +1,5 @@
+const { format } = require('date-fns');
+
 const formatDate = (inputDate) => {
   const date = new Date(inputDate);
 
@@ -10,4 +12,8 @@ const formatDate = (inputDate) => {
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 };
 
-module.exports = { formatDate };
+const dateForErrorLog = () => {
+  return format(new Date(), 'dd-MM-yyyy HH:mm:ss');
+};
+
+module.exports = { formatDate, dateForErrorLog };
