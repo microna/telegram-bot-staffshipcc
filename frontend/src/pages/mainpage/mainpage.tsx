@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
-import { Button, Table } from 'flowbite-react';
+import { Button, DarkThemeToggle, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 
 export interface IProduct {
@@ -219,7 +219,11 @@ const Mainpage: React.FC = () => {
           </Table.Body>
         </Table>
         <div className="absolute flex right-10 top-5 gap-3">
-          <Button className="text-gray-400" onClick={() => navigate('logs')}>
+          <DarkThemeToggle />
+          <Button
+            className="text-gray-400 dark:text-red-400"
+            onClick={() => navigate('logs')}
+          >
             Logs
           </Button>
           <Button className="text-gray-400" onClick={() => clearToken()}>
