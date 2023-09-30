@@ -1,7 +1,8 @@
 const { commands, adminCommands } = require('../../utils/commands');
+const { dateForErrorLog } = require('../../utils/formatDate');
 const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
-module.exports = (app, bot) => {
+module.exports = (app, bot, logger) => {
   try {
     const adminId = process.env.ADMIN_ID;
 
@@ -17,6 +18,7 @@ module.exports = (app, bot) => {
       bot.setMyCommands(isAdmin ? [...adminCommands, ...commands] : commands);
     });
   } catch (e) {
+    logger.error(`${dateForErrorLog()} -- Initial error start bot`);
     console.log('Bot controller error');
   }
 };
