@@ -17,7 +17,7 @@ require('./Controllers/BotController')(app, bot);
 app.get('/', (req, res) => {
   console.log(req.body);
   res.json({
-    hello: 'Staging!',
+    hello: 'Prod!',
   });
 });
 
