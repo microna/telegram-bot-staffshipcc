@@ -18,9 +18,7 @@ function App() {
               <Route path="sign-in" element={<Auth />} />
             </Route>
             <Route element={<Private />}>
-              <Route path="/" element={<Mainpage />} />
-            </Route>
-            <Route element={<Private />}>
+              <Route index element={<Mainpage />} />
               <Route path="logs" element={<LogsPage />} />
             </Route>
           </Route>
