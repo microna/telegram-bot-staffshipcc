@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
-import { Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface IProduct {
   _id: string;
@@ -109,6 +110,7 @@ const Mainpage: React.FC = () => {
   const { clearToken } = useAuthState();
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const buttonRef = useRef(null);
+  const navigate = useNavigate();
   useEffect(() => {
     handleGetProducts();
   }, []);
@@ -180,7 +182,7 @@ const Mainpage: React.FC = () => {
             )}
           </div>
         </div>
-        <Table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+        <Table className="relative w-full text-left text-sm text-gray-500 dark:text-gray-400 min-w-full divide-y divide-gray-200 dark:divide-gray-600">
           <Table.Head className="group/head text-xs uppercase bg-gray-50">
             <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
               Date
@@ -216,12 +218,14 @@ const Mainpage: React.FC = () => {
               ))}
           </Table.Body>
         </Table>
-        <button
-          className="absolute flex text-gray-400 right-10 top-5"
-          onClick={() => clearToken()}
-        >
-          Logout
-        </button>
+        <div className="absolute flex right-10 top-5 gap-3">
+          <Button className="text-gray-400" onClick={() => navigate('logs')}>
+            Logs
+          </Button>
+          <Button className="text-gray-400" onClick={() => clearToken()}>
+            Logout
+          </Button>
+        </div>
       </div>
     </div>
   );

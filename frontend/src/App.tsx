@@ -6,6 +6,7 @@ import { WaitForAuthResolve } from 'auth-state/route-wrappers/wait-for-auth-reso
 import Auth from 'pages/auth/auth';
 import { OnlyPublic } from 'auth-state/route-wrappers/only-public';
 import { Private } from 'auth-state/route-wrappers/private';
+import LogsPage from 'pages/logs/logspage';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
             </Route>
             <Route element={<Private />}>
               <Route path="/" element={<Mainpage />} />
+            </Route>
+            <Route element={<Private />}>
+              <Route path="logs" element={<LogsPage />} />
             </Route>
           </Route>
         </Routes>
