@@ -2,6 +2,7 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const winston = require('winston');
+const fs = require('fs');
 const app = express();
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
@@ -32,10 +33,7 @@ const adminId = process.env.ADMIN_ID;
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-  ],
+  transports: [new winston.transports.File({ filename: 'combined.log' })],
 });
 
 app.use(
@@ -93,6 +91,19 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
 
 app.post('/login', login);
 
+app.get('/logs', checkAuth, function (req, res) {
+  try {
+    const logData = fs.readFileSync('./combined.log', 'utf8');
+    const logs = logData.split('\n').filter((line) => line.trim() !== '');
+    const parsedLogs = logs.map((logEntry) => JSON.parse(logEntry));
+    res.json(parsedLogs);
+  } catch (err) {
+    res.status(500).json({
+      message: 'failed get logs',
+      err,
+    });
+  }
+});
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
