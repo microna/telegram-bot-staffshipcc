@@ -82,7 +82,7 @@ const Auth = () => {
             </div>
             <button
               type="submit"
-              className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300"
+              className="bg-[#002D74] mb-[20px] rounded-xl text-white py-2 hover:scale-105 duration-300"
             >
               Submit
             </button>

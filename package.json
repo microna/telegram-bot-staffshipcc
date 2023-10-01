@@ -12,9 +12,5 @@
       "install:frontend": "cd frontend && yarn",
       "build:frontend": "cd frontend && yarn build && cp -r build/* ../backend/public/",
       "start": "./start.sh"
-   },
-   "dependencies": {
-      "date-fns": "^2.30.0",
-      "winston": "^3.10.0"
    }
 }
