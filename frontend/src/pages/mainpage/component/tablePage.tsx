@@ -100,9 +100,9 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           </strong>
         </Modal.Header>
         <div className="relative">
-          <div className="flex gap-5">
+          <div className="flex gap-5 items-center mt-2">
             <Button
-              className="w-[10%] ml-7 bg-blue-100 text-lg"
+              className="w-[150px] ml-7 bg-blue-100 text-lg"
               color="primary"
               onClick={() => setIsOpenDropDown(!isOpenDropDown)}
             >
@@ -158,8 +158,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
             </div>
           )}
         </div>
+        <Label className="mt-3 ml-6">trackNumber: {product.trackNumber}</Label>
+        <Label className="mt-3 ml-6">totalAmount: {product.totalAmount}</Label>
+        <Label className="mt-3 ml-6">Info: {product.info}</Label>
 
-        <Label className="mt-3 ml-6">{product.info}</Label>
         <Modal.Body>
           <form>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -201,19 +203,19 @@ export const ProductsTable: FC<TableProductsPageProps> = function ({
       key={product._id}
       className="w-full hover:bg-gray-100 dark:hover:bg-neutral-300"
     >
-      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+      <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         {product.updatedAt}
       </Table.Cell>
       <Table.Cell className="truncate overflow-hidden max-w-[200px] font-medium whitespace-nowrap p-4">
         {product.info}
       </Table.Cell>
-      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
+      <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
         {product.status}
       </Table.Cell>
-      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+      <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         {product.trackNumber}
       </Table.Cell>
-      <Table.Cell className="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
+      <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         <a
           className="text-blue-900"
           href={`https://t.me/${product.userTGNick}`}
