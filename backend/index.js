@@ -108,6 +108,8 @@ app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.listen(PORT, () => {
+const host = '0.0.0.0';
+
+app.listen(PORT, host, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });
