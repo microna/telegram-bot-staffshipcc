@@ -61,7 +61,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
 
   return (
     <div
-      className="absolute z-10 bg-gray-100 py-1"
+      className="absolute z-10 bg-gray-100 py-1 w-[16%]"
       role="none"
       ref={dropdownRef}
     >
@@ -153,7 +153,7 @@ const Mainpage: React.FC = () => {
   return (
     <div className="w-full h-full dark:bg-gray-600">
       <div className="container dark:bg-gray-600">
-        <div className="w-[80%] m-auto   pb-[100px]">
+        <div className="w-[100%] m-auto   pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
               All products
@@ -237,12 +237,15 @@ const Mainpage: React.FC = () => {
           <div className="absolute flex right-10 top-5 gap-3">
             <DarkThemeToggle />
             <Button
-              className="text-gray-400 dark:text-red-400"
+              className="dark:text-white-400"
               onClick={() => navigate('logs')}
             >
               Logs
             </Button>
-            <Button className="text-gray-400" onClick={() => clearToken()}>
+            <Button
+              className="dark:text-white-400"
+              onClick={() => clearToken()}
+            >
               Logout
             </Button>
           </div>
