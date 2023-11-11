@@ -1,4 +1,5 @@
 const { mainButtons } = require('../../Components/Buttons');
+const { Status } = require('../../Components/Status');
 const {
   saveProduct,
   updateProductTotalAmount,
@@ -132,14 +133,13 @@ module.exports = (app, bot, logger) => {
           await bot.sendMessage(userTGId, 'Пусто');
           return;
         }
-        const mapProducts = products.map((product) => {
-          return {
-            trackNumber: product.trackNumber,
-            status: product.status,
-          };
-        });
-        console.log(mapProducts);
-        await bot.sendMessage(userTGId, `${mapProducts} `);
+        const formattedProducts = products
+          .filter((item) => item.status !== Status.Archive)
+          .map((product) => {
+            return `Track Number: ${product.trackNumber}\nStatus: ${product.status}\n`;
+          });
+        const messageText = formattedProducts.join('\n');
+        await bot.sendMessage(userTGId, messageText);
       }
 
       if (msg.text === '🤑Тарифы') {

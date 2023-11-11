@@ -45,7 +45,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./src/Controllers/Bot/BotController')(app, bot, logger);
+require('./src/Controllers/Bot/StartController')(app, bot, logger);
 require('./src/Controllers/Bot/MenuController')(app, bot, logger);
 require('./src/Controllers/Bot/AdminController')(app, bot, logger);
 require('./src/Controllers/Bot/ButtonController')(app, bot, logger);
