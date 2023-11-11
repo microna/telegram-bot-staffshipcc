@@ -9,7 +9,12 @@ const mongoose = require('mongoose');
 
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
-const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
+const {
+  getAllProducts,
+  updateProduct,
+  getProductById,
+  deleteProduct,
+} = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 const { dateForErrorLog } = require('./src/utils/formatDate');
 
@@ -45,7 +50,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./src/Controllers/Bot/BotController')(app, bot, logger);
+require('./src/Controllers/Bot/StartController')(app, bot, logger);
 require('./src/Controllers/Bot/MenuController')(app, bot, logger);
 require('./src/Controllers/Bot/AdminController')(app, bot, logger);
 require('./src/Controllers/Bot/ButtonController')(app, bot, logger);
@@ -86,6 +91,15 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
       message: 'failed change status',
       err,
     });
+  }
+});
+
+app.delete('/deleteProduct/:id', checkAuth, async (req) => {
+  const result = await deleteProduct({ id: req.params.id });
+  if (result) {
+    return { isSuccess: true };
+  } else {
+    return { isSuccess: false };
   }
 });
 
