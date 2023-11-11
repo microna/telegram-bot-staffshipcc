@@ -37,6 +37,7 @@ module.exports = (app, bot, logger) => {
       }
 
       if (states[msg.from.id] == 1) {
+        console.log(msg.text);
         const result = await saveProduct({
           trackNumber: msg.text,
           userTGId: msg.from.id,
