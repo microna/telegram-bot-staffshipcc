@@ -68,35 +68,50 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.New)}
+        onClick={() => {
+          setStatus(Status.New);
+          setIsOpenDropDown(false);
+        }}
       >
         New
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.ToEdit)}
+        onClick={() => {
+          setStatus(Status.ToEdit);
+          setIsOpenDropDown(false);
+        }}
       >
         To edit
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.Reject)}
+        onClick={() => {
+          setStatus(Status.Reject);
+          setIsOpenDropDown(false);
+        }}
       >
         Reject
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.OnReview)}
+        onClick={() => {
+          setStatus(Status.OnReview);
+          setIsOpenDropDown(false);
+        }}
       >
         On review
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.All)}
+        onClick={() => {
+          setStatus(Status.All);
+          setIsOpenDropDown(false);
+        }}
       >
         All
       </button>

@@ -65,7 +65,7 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
     const { id, status, message } = req.body;
     const result = await updateProduct({ id, status, message });
     const product = await getProductById({ id });
-    const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n Info: ${product.info} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
+    const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
     if (result) {
       await sendMessageToUser({
         bot,

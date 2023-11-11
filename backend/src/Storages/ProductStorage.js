@@ -126,6 +126,15 @@ const getAllProducts = async () => {
   }
 };
 
+const userProductsByUserTGId = ({ userTGId }) => {
+  try {
+    const products = ProductModel.find({ userTGId });
+    return products;
+  } catch (error) {
+    console.log('userProductsByUserTGId');
+  }
+};
+
 module.exports = {
   saveProduct,
   updateProductStatus,
@@ -135,4 +144,5 @@ module.exports = {
   getProductById,
   getAllProducts,
   updateProduct,
+  userProductsByUserTGId,
 };

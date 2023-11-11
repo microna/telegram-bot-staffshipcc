@@ -64,6 +64,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
     });
     if (result) {
       setOpen(false);
+      setProductDetails('')
       await handleGetProducts();
     }
   };
@@ -71,6 +72,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setProductDetails(event.target.value);
   };
+  console.log(product.trackNumber);
   return (
     <>
       <Button color="primary" onClick={() => setOpen(!isOpen)}>
@@ -158,9 +160,18 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
             </div>
           )}
         </div>
-        <Label className="mt-3 ml-6">trackNumber: {product.trackNumber}</Label>
-        <Label className="mt-3 ml-6">totalAmount: {product.totalAmount}</Label>
-        <Label className="mt-3 ml-6">Info: {product.info}</Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line">
+          trackNumber: <br />
+          {product.trackNumber}
+        </Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line">
+          totalAmount: <br />
+          {product.totalAmount}
+        </Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line">
+          Info: <br />
+          {product.info}
+        </Label>
 
         <Modal.Body>
           <form>

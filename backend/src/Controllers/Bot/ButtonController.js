@@ -3,13 +3,10 @@ const {
   saveProduct,
   updateProductTotalAmount,
   updateProductInfo,
+  userProductsByUserTGId,
 } = require('../../Storages/ProductStorage');
 const { dateForErrorLog } = require('../../utils/formatDate');
 
-// const info = {
-//   yourMsg: 'Ваше сообщение отправлено администратору.',
-//   recipient: 'отримувач',
-// };
 let states = {};
 module.exports = (app, bot, logger) => {
   try {
@@ -37,6 +34,7 @@ module.exports = (app, bot, logger) => {
       }
 
       if (states[msg.from.id] == 1) {
+        console.log(msg.text);
         const result = await saveProduct({
           trackNumber: msg.text,
           userTGId: msg.from.id,
@@ -124,6 +122,24 @@ module.exports = (app, bot, logger) => {
           delete states[msg.from.id];
           delete states[msg.from.id + `id`];
         }
+      }
+
+      if (msg.text === 'Мої посилки') {
+        const userTGId = msg.from.id;
+        if (!userTGId) return;
+        const products = await userProductsByUserTGId({ userTGId });
+        if (!products) {
+          await bot.sendMessage(userTGId, 'Пусто');
+          return;
+        }
+        const mapProducts = products.map((product) => {
+          return {
+            trackNumber: product.trackNumber,
+            status: product.status,
+          };
+        });
+        console.log(mapProducts);
+        await bot.sendMessage(userTGId, `${mapProducts} `);
       }
 
       if (msg.text === '🤑Тарифы') {
