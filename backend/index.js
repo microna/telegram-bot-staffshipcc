@@ -9,7 +9,12 @@ const mongoose = require('mongoose');
 
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
-const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
+const {
+  getAllProducts,
+  updateProduct,
+  getProductById,
+  deleteProduct,
+} = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 const { dateForErrorLog } = require('./src/utils/formatDate');
 
@@ -86,6 +91,15 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
       message: 'failed change status',
       err,
     });
+  }
+});
+
+app.delete('/deleteProduct/:id', checkAuth, async (req) => {
+  const result = await deleteProduct({ id: req.params.id });
+  if (result) {
+    return { isSuccess: true };
+  } else {
+    return { isSuccess: false };
   }
 });
 

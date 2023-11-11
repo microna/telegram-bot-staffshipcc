@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { ChangeEvent } from 'react';
-import { Button, Label, Modal, Table, Textarea } from 'flowbite-react';
+import { Button, Label, Modal, Spinner, Table, Textarea } from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';
@@ -17,6 +17,8 @@ interface IStatusChange {
   message?: string;
 }
 
+interface IDeleteProduct extends Partial<IStatusChange> {}
+
 const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   try {
     const result = await axiosPrivate.patch('changeProductStatus', {
@@ -30,23 +32,14 @@ const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   }
 };
 
-//TODO if needed. Add search product
-// const SearchForProducts: FC = function () {
-//   return (
-//     <form className="mb-4 sm:mb-0 sm:pr-3" action="#" method="GET">
-//       <Label htmlFor="products-search" className="sr-only">
-//         Search
-//       </Label>
-//       <div className="relative mt-1 lg:w-64 xl:w-96">
-//         <TextInput
-//           id="products-search"
-//           name="products-search"
-//           placeholder="Search for products"
-//         />
-//       </div>
-//     </form>
-//   );
-// };
+const deleteProductFromArchive = async ({ id }: IDeleteProduct) => {
+  try {
+    const result = await axiosPrivate.delete(`deleteProduct/${id}`);
+    return result;
+  } catch (e) {
+    console.log('error delete');
+  }
+};
 
 const EditProductModal: FC<TableProductsPageProps> = function ({
   product,
@@ -55,7 +48,9 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   const [isOpen, setOpen] = useState(false);
   const [status, setStatus] = useState(product.status);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [deleteProduct, setDeleteProduct] = useState(false);
   const [productDetails, setProductDetails] = useState('');
+  const [loading, setLoading] = useState(false);
   const handleChangeProductStatus = async () => {
     const result = await changeProductStatus({
       id: product._id,
@@ -64,21 +59,78 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
     });
     if (result) {
       setOpen(false);
-      setProductDetails('')
+      setProductDetails('');
+      setDeleteProduct(false);
       await handleGetProducts();
     }
+  };
+
+  const handleDeleteProduct = async () => {
+    setLoading(true);
+    const result = await deleteProductFromArchive({ id: product._id });
+    if (!result) return;
+    setLoading(false);
+    setDeleteProduct(false);
+    await handleGetProducts();
   };
 
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setProductDetails(event.target.value);
   };
-  console.log(product.trackNumber);
   return (
     <>
-      <Button color="primary" onClick={() => setOpen(!isOpen)}>
-        <HiPencilAlt className="mr-2 text-lg" />
-        Edit
-      </Button>
+      {loading && (
+        <Spinner className="absolute flex w-full items-center justify-center" />
+      )}
+      {status !== Status.Archive && (
+        <Button color="primary" onClick={() => setOpen(!isOpen)}>
+          <HiPencilAlt className="mr-2 text-lg" />
+          Edit
+        </Button>
+      )}
+      {status === Status.Archive && (
+        <Button
+          className="ml-2"
+          color="primary"
+          onClick={() => setDeleteProduct(!deleteProduct)}
+        >
+          <HiPencilAlt className="mr-2 text-lg" />
+          Delete
+        </Button>
+      )}
+      <Modal
+        className="bg-gray-900"
+        onClose={() => setDeleteProduct(false)}
+        show={deleteProduct}
+      >
+        {' '}
+        <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
+          Вы уверены что хотите НАВСЕГДА удалить?
+        </Modal.Header>
+        <Modal.Footer className="justify-center">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              {' '}
+              <Button
+                className="w-[200px] bg-blue-400 text-lg m-[10px]"
+                color="primary"
+                onClick={handleDeleteProduct}
+              >
+                Да!!!
+              </Button>
+              <Button
+                className="w-[200px] bg-blue-400 text-lg m-[10px]"
+                color="primary"
+                onClick={() => setDeleteProduct(false)}
+              >
+                Нет
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
       <Modal
         className="bg-gray-900"
         onClose={() => setOpen(false)}
@@ -153,9 +205,9 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-2"
-                onClick={() => setStatus(Status.All)}
+                onClick={() => setStatus(Status.Archive)}
               >
-                All
+                Archive
               </button>
             </div>
           )}
@@ -174,6 +226,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         </Label>
 
         <Modal.Body>
+          (
           <form>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="lg:col-span-2 p-5">
@@ -190,6 +243,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
               </div>
             </div>
           </form>
+          )
         </Modal.Body>
         <Modal.Footer className="justify-center">
           <Button

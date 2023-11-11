@@ -135,6 +135,10 @@ const userProductsByUserTGId = ({ userTGId }) => {
   }
 };
 
+const deleteProduct = ({ id }) => {
+  return ProductModel.findByIdAndRemove({ _id: id });
+};
+
 module.exports = {
   saveProduct,
   updateProductStatus,
@@ -145,4 +149,5 @@ module.exports = {
   getAllProducts,
   updateProduct,
   userProductsByUserTGId,
+  deleteProduct,
 };
