@@ -6,12 +6,7 @@ const {
   userProductsByUserTGId,
 } = require('../../Storages/ProductStorage');
 const { dateForErrorLog } = require('../../utils/formatDate');
-const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
-// const info = {
-//   yourMsg: 'Ваше сообщение отправлено администратору.',
-//   recipient: 'отримувач',
-// };
 let states = {};
 module.exports = (app, bot, logger) => {
   try {
