@@ -33,12 +33,12 @@ const LogsPage = () => {
   return (
     <div>
       <Button
-        className="absolute right-[5%] top-[5%] text-gray-400"
+        className="absolute right-[5%] top-[5%] text-gray-100"
         onClick={() => navigate('/')}
       >
         Go back
       </Button>
-      <div className="flex flex-col w-full h-full items-center mt-[5%]">
+      <div className="flex flex-col w-full h-full items-center mt-[10%] mb-[15%]">
         {logs?.map((log, index) => {
           return (
             <div key={index} className="flex">
