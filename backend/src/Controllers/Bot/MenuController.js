@@ -10,10 +10,11 @@ module.exports = (app, bot, logger) => {
         await sendMessageToUser({
           bot,
           userId: msg.chat.id,
-          message: `❗️Чтобы добавить посылку выполняйте инструкции
-          https://teletype.in/@usetname9472/rules123
+          message: `
+❗️Чтобы добавить посылку выполняйте инструкции
+https://teletype.in/@usetname9472/rules123
           
-          📩 По любим вопросам пишите @staffship
+📩 По любим вопросам пишите @staffship
           `,
           options: {
             reply_markup: {

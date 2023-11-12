@@ -22,7 +22,6 @@ const LogsPage = () => {
 
   const updateLogs = async () => {
     const result = await changeProductStatus();
-    console.log(result);
     if (result) {
       setLogs(result);
     }

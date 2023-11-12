@@ -18,7 +18,6 @@ const addAdminUser = async () => {
 const checkLogin = async (req, res) => {
   try {
     const user = await AdminModel.findById(req.userId);
-    console.log(user._doc);
     if (!user) {
       return res.status(404).json({
         message: 'User not finded',
