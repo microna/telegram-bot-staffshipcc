@@ -151,7 +151,7 @@ const Mainpage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full dark:bg-gray-600">
+    <div className="dark:bg-gray-600 min-h-screen">
       <div className="container dark:bg-gray-600">
         <div className="w-[100%] m-auto   pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
