@@ -53,7 +53,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   handleGetProducts,
 }) {
   const [isOpen, setOpen] = useState(false);
-  const [modalSize, setModalSize] = useState<string>('7xl');
+  const modalSize = '7xl';
   const [status, setStatus] = useState(product.status);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const [productDetails, setProductDetails] = useState('');
