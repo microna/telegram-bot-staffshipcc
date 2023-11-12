@@ -161,7 +161,7 @@ const Mainpage: React.FC = () => {
         <div className="w-[80%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
-              Archive products
+              Products
             </h1>
             <div
               className=""
@@ -230,13 +230,15 @@ const Mainpage: React.FC = () => {
             </Table.Head>
             <Table.Body className="w-full divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100 ">
               {products &&
-                filteredProducts(products, status).map((product: IProduct) => (
-                  <ProductsTable
-                    product={product}
-                    key={product._id}
-                    handleGetProducts={handleGetProducts}
-                  />
-                ))}
+                filteredProducts(products, status)
+                  .reverse()
+                  .map((product: IProduct) => (
+                    <ProductsTable
+                      product={product}
+                      key={product._id}
+                      handleGetProducts={handleGetProducts}
+                    />
+                  ))}
             </Table.Body>
           </Table>
           <div className="absolute flex right-10 top-5 gap-3">
