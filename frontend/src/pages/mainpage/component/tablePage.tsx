@@ -100,7 +100,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         </Button>
       )}
       <Modal
-        className="bg-gray-900"
+        className="bg-gray-900 "
         onClose={() => setDeleteProduct(false)}
         show={deleteProduct}
       >
@@ -138,7 +138,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         onClose={() => setOpen(false)}
         show={isOpen}
       >
-        <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
+        <Modal.Header className="bg-gray-60 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
             <span className="mx-5 text-white"> Edit product.</span>{' '}
             <span className="mx-5 text-white">User:</span>{' '}
@@ -227,24 +227,23 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
             </div>
           )}
         </div>
-        <Label className="mt-3 ml-6 whitespace-pre-line">
+        <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
           trackNumber: <br />
           {product.trackNumber}
         </Label>
-        <Label className="mt-3 ml-6 whitespace-pre-line ">
+        <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
           totalAmount: <br />
           {product.totalAmount}
         </Label>
-        <Label className="mt-3 ml-6 whitespace-pre-line">
+        <Label className="mt-3 ml-6 whitespace-pre-line box-border break-words ">
           Info: <br />
           {product.info}
         </Label>
 
-        <Modal.Body>
-          (
-          <form>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <div className="lg:col-span-2">
+
+        <form className='bg-gray-60 dark:bg-gray-700'>
+            <div className=" w-full grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div className="lg:col-span-2 p-5">
                 <Label htmlFor="productDetails">Write answer</Label>
                 <Textarea
                   id="productDetails"
@@ -258,9 +257,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
               </div>
             </div>
           </form>
-          )
-        </Modal.Body>
-        <Modal.Footer className="justify-center">
+        <Modal.Footer className="justify-center bg-gray-60 dark:bg-gray-700">
           <Button
             className="w-[200px] bg-blue-400 text-lg m-[10px]"
             color="primary"
