@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { ChangeEvent } from 'react';
-import { Button, Label, Modal, Table, Textarea } from 'flowbite-react';
+import { Button, Label, Modal, Spinner, Table, Textarea } from 'flowbite-react';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';
@@ -17,6 +17,8 @@ interface IStatusChange {
   message?: string;
 }
 
+interface IDeleteProduct extends Partial<IStatusChange> {}
+
 const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   try {
     const result = await axiosPrivate.patch('changeProductStatus', {
@@ -30,32 +32,26 @@ const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   }
 };
 
-//TODO if needed. Add search product
-// const SearchForProducts: FC = function () {
-//   return (
-//     <form className="mb-4 sm:mb-0 sm:pr-3" action="#" method="GET">
-//       <Label htmlFor="products-search" className="sr-only">
-//         Search
-//       </Label>
-//       <div className="relative mt-1 lg:w-64 xl:w-96">
-//         <TextInput
-//           id="products-search"
-//           name="products-search"
-//           placeholder="Search for products"
-//         />
-//       </div>
-//     </form>
-//   );
-// };
+const deleteProductFromArchive = async ({ id }: IDeleteProduct) => {
+  try {
+    const result = await axiosPrivate.delete(`deleteProduct/${id}`);
+    return result;
+  } catch (e) {
+    console.log('error delete');
+  }
+};
 
 const EditProductModal: FC<TableProductsPageProps> = function ({
   product,
   handleGetProducts,
 }) {
   const [isOpen, setOpen] = useState(false);
+  const modalSize = '7xl';
   const [status, setStatus] = useState(product.status);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [deleteProduct, setDeleteProduct] = useState(false);
   const [productDetails, setProductDetails] = useState('');
+  const [loading, setLoading] = useState(false);
   const handleChangeProductStatus = async () => {
     const result = await changeProductStatus({
       id: product._id,
@@ -64,8 +60,19 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
     });
     if (result) {
       setOpen(false);
+      setProductDetails('');
+      setDeleteProduct(false);
       await handleGetProducts();
     }
+  };
+
+  const handleDeleteProduct = async () => {
+    setLoading(true);
+    const result = await deleteProductFromArchive({ id: product._id });
+    if (!result) return;
+    setLoading(false);
+    setDeleteProduct(false);
+    await handleGetProducts();
   };
 
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -73,36 +80,86 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   };
   return (
     <>
-      <Button color="primary" onClick={() => setOpen(!isOpen)}>
-        <HiPencilAlt className="mr-2 text-lg" />
-        Edit
-      </Button>
+      {loading && (
+        <Spinner className="absolute flex w-full items-center justify-center" />
+      )}
+      {status !== Status.Archive && (
+        <Button color="primary" onClick={() => setOpen(!isOpen)}>
+          <HiPencilAlt className="mr-2 text-lg" />
+          Edit
+        </Button>
+      )}
+      {status === Status.Archive && (
+        <Button
+          className="ml-2"
+          color="primary"
+          onClick={() => setDeleteProduct(!deleteProduct)}
+        >
+          <HiPencilAlt className="mr-2 text-lg" />
+          Delete
+        </Button>
+      )}
       <Modal
-        className="bg-gray-900"
+        className="bg-gray-900 "
+        onClose={() => setDeleteProduct(false)}
+        show={deleteProduct}
+      >
+        {' '}
+        <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
+          Вы уверены что хотите НАВСЕГДА удалить?
+        </Modal.Header>
+        <Modal.Footer className="justify-center">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              {' '}
+              <Button
+                className="w-[200px] bg-blue-400 text-lg m-[10px]"
+                color="primary"
+                onClick={handleDeleteProduct}
+              >
+                Да!!!
+              </Button>
+              <Button
+                className="w-[200px] bg-blue-400 text-lg m-[10px]"
+                color="primary"
+                onClick={() => setDeleteProduct(false)}
+              >
+                Нет
+              </Button>
+            </>
+          )}
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        size={modalSize}
+        className="bg-gray-900 "
         onClose={() => setOpen(false)}
         show={isOpen}
       >
-        <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
+        <Modal.Header className="bg-gray-60 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
-            <span className="mx-5"> Edit product.</span> User:{' '}
-            <span className="text-gray-400 text-gray-900">
+            <span className="mx-5 text-white"> Edit product.</span>{' '}
+            <span className="mx-5 text-white">User:</span>{' '}
+            <span className="text-white">
               {' '}
               <a
-                className="text-blue-900"
+                className="text-blue-400 underline"
                 href={`https://t.me/${product.userTGNick}`}
                 target="_blank"
               >
                 {product.userTGNick}
               </a>
             </span>
-            <span className="ml-5">Status: </span>
-            <span className="text-gray-400">{product.status}</span>
+            <span className="ml-5 text-white">Status: </span>
+            <span className="text-blue-400">{product.status}</span>
           </strong>
         </Modal.Header>
         <div className="relative">
           <div className="flex gap-5 items-center mt-2">
             <Button
-              className="w-[150px] ml-7 bg-blue-100 text-lg"
+              className="w-[150px] ml-5 bg-blue-100 text-lg"
               color="primary"
               onClick={() => setIsOpenDropDown(!isOpenDropDown)}
             >
@@ -112,14 +169,17 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           </div>
           {isOpenDropDown && (
             <div
-              className="w-[10%] absolute left-[30px] bg-gray-100 py-1"
+              className="w-[23%] absolute left-[22px] bg-gray-100  py-1"
               role="none"
             >
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-0"
-                onClick={() => setStatus(Status.New)}
+                onClick={() => {
+                  setStatus(Status.New);
+                  setIsOpenDropDown(false);
+                }}
               >
                 New
               </button>
@@ -127,7 +187,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-0"
-                onClick={() => setStatus(Status.ToEdit)}
+                onClick={() => {
+                  setStatus(Status.ToEdit);
+                  setIsOpenDropDown(false);
+                }}
               >
                 To edit
               </button>
@@ -135,7 +198,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-1"
-                onClick={() => setStatus(Status.Reject)}
+                onClick={() => {
+                  setStatus(Status.Reject);
+                  setIsOpenDropDown(false);
+                }}
               >
                 Reject
               </button>
@@ -143,7 +209,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-2"
-                onClick={() => setStatus(Status.OnReview)}
+                onClick={() => {
+                  setStatus(Status.OnReview);
+                  setIsOpenDropDown(false);
+                }}
               >
                 On rewiev
               </button>
@@ -151,20 +220,29 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-2"
-                onClick={() => setStatus(Status.All)}
+                onClick={() => setStatus(Status.Archive)}
               >
-                All
+                Archive
               </button>
             </div>
           )}
         </div>
-        <Label className="mt-3 ml-6">trackNumber: {product.trackNumber}</Label>
-        <Label className="mt-3 ml-6">totalAmount: {product.totalAmount}</Label>
-        <Label className="mt-3 ml-6">Info: {product.info}</Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
+          trackNumber: <br />
+          {product.trackNumber}
+        </Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
+          totalAmount: <br />
+          {product.totalAmount}
+        </Label>
+        <Label className="mt-3 ml-6 whitespace-pre-line box-border break-words ">
+          Info: <br />
+          {product.info}
+        </Label>
 
-        <Modal.Body>
-          <form>
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+
+        <form className='bg-gray-60 dark:bg-gray-700'>
+            <div className=" w-full grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="lg:col-span-2 p-5">
                 <Label htmlFor="productDetails">Write answer</Label>
                 <Textarea
@@ -179,8 +257,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
               </div>
             </div>
           </form>
-        </Modal.Body>
-        <Modal.Footer className="justify-center">
+        <Modal.Footer className="justify-center bg-gray-60 dark:bg-gray-700">
           <Button
             className="w-[200px] bg-blue-400 text-lg m-[10px]"
             color="primary"

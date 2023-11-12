@@ -10,7 +10,12 @@ module.exports = (app, bot, logger) => {
         await sendMessageToUser({
           bot,
           userId: msg.chat.id,
-          message: `Меню бота`,
+          message: `
+❗️Чтобы добавить посылку выполняйте инструкции
+https://teletype.in/@usetname9472/rules123
+          
+📩 По любим вопросам пишите @staffship
+          `,
           options: {
             reply_markup: {
               keyboard: mainButtons,
@@ -20,11 +25,11 @@ module.exports = (app, bot, logger) => {
         });
       }
 
-      if (msg.text === '/help') {
+      if (msg.text === '/support') {
         await sendMessageToUser({
           bot,
           userId: msg.chat.id,
-          message: `TODO Связаться с администрацией`,
+          message: `@staffship`,
           options: {},
         });
       }

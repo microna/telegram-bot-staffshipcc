@@ -126,6 +126,19 @@ const getAllProducts = async () => {
   }
 };
 
+const userProductsByUserTGId = ({ userTGId }) => {
+  try {
+    const products = ProductModel.find({ userTGId });
+    return products;
+  } catch (error) {
+    console.log('error userProductsByUserTGId');
+  }
+};
+
+const deleteProduct = ({ id }) => {
+  return ProductModel.findByIdAndRemove({ _id: id });
+};
+
 module.exports = {
   saveProduct,
   updateProductStatus,
@@ -135,4 +148,6 @@ module.exports = {
   getProductById,
   getAllProducts,
   updateProduct,
+  userProductsByUserTGId,
+  deleteProduct,
 };

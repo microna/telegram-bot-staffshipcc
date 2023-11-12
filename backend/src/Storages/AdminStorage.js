@@ -18,7 +18,6 @@ const addAdminUser = async () => {
 const checkLogin = async (req, res) => {
   try {
     const user = await AdminModel.findById(req.userId);
-    console.log(user._doc);
     if (!user) {
       return res.status(404).json({
         message: 'User not finded',
@@ -44,14 +43,6 @@ const login = async (req, res) => {
         message: 'Login or Password incorrect (User not finded)',
       });
     }
-    // const isValidPass = await bcrypt.compare(req.body.password, user._doc.passwordHash);
-
-    // if (!isValidPass) {
-    //   return res.status(404).json({
-    //     message: 'Login or Password incorrect',
-    //   });
-    // }
-
     const token = jwt.sign(
       {
         _id: user._id,

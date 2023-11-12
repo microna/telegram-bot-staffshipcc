@@ -4,8 +4,8 @@ const commands = [
     description: 'Просмотреть меню',
   },
   {
-    command: 'help',
-    description: 'Получить помощь',
+    command: 'support',
+    description: 'Написать саппорту',
   },
 ];
 

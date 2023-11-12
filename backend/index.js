@@ -9,7 +9,12 @@ const mongoose = require('mongoose');
 
 const { checkAuth } = require('./src/utils/checkAuth');
 const { addAdminUser, login } = require('./src/Storages/AdminStorage');
-const { getAllProducts, updateProduct, getProductById } = require('./src/Storages/ProductStorage');
+const {
+  getAllProducts,
+  updateProduct,
+  getProductById,
+  deleteProduct,
+} = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 const { dateForErrorLog } = require('./src/utils/formatDate');
 
@@ -45,7 +50,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
 
-require('./src/Controllers/Bot/BotController')(app, bot, logger);
+require('./src/Controllers/Bot/StartController')(app, bot, logger);
 require('./src/Controllers/Bot/MenuController')(app, bot, logger);
 require('./src/Controllers/Bot/AdminController')(app, bot, logger);
 require('./src/Controllers/Bot/ButtonController')(app, bot, logger);
@@ -65,7 +70,7 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
     const { id, status, message } = req.body;
     const result = await updateProduct({ id, status, message });
     const product = await getProductById({ id });
-    const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n Info: ${product.info} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
+    const textAnswer = `Track number: ${product.trackNumber} \n totalAmount: ${product.totalAmount} \n status: ${product.status} \nadmin comment: \n${product.comments}`;
     if (result) {
       await sendMessageToUser({
         bot,
@@ -89,6 +94,15 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
   }
 });
 
+app.delete('/deleteProduct/:id', checkAuth, async (req) => {
+  const result = await deleteProduct({ id: req.params.id });
+  if (result) {
+    return { isSuccess: true };
+  } else {
+    return { isSuccess: false };
+  }
+});
+
 app.post('/login', login);
 
 app.get('/logs', checkAuth, function (req, res) {
@@ -108,6 +122,8 @@ app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.listen(PORT, () => {
+const host = '0.0.0.0';
+
+app.listen(PORT, host, () => {
   console.log(`Server listening on port ${PORT} 🚀`);
 });

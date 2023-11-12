@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuthState } from 'auth-state/use-auth-state.hook';
 import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
-import { Button, DarkThemeToggle, Table } from 'flowbite-react';
+import { Button, DarkThemeToggle, Spinner, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 
 export interface IProduct {
@@ -24,7 +24,7 @@ export enum Status {
   Reject = 'Reject',
   OnReview = 'On review',
   New = 'New',
-  All = 'All',
+  Archive = 'Archive',
 }
 
 interface IDropdownMenu {
@@ -61,44 +61,59 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
 
   return (
     <div
-      className="absolute z-10 bg-gray-100 py-1"
+      className="absolute z-10 bg-gray-100 py-1 w-[16%]"
       role="none"
       ref={dropdownRef}
     >
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.New)}
+        onClick={() => {
+          setStatus(Status.New);
+          setIsOpenDropDown(false);
+        }}
       >
         New
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.ToEdit)}
+        onClick={() => {
+          setStatus(Status.ToEdit);
+          setIsOpenDropDown(false);
+        }}
       >
         To edit
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.Reject)}
+        onClick={() => {
+          setStatus(Status.Reject);
+          setIsOpenDropDown(false);
+        }}
       >
         Reject
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.OnReview)}
+        onClick={() => {
+          setStatus(Status.OnReview);
+          setIsOpenDropDown(false);
+        }}
       >
         On review
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
         role="menuitem"
-        onClick={() => setStatus(Status.All)}
+        onClick={() => {
+          setStatus(Status.Archive);
+          setIsOpenDropDown(false);
+        }}
       >
-        All
+        Archive
       </button>
     </div>
   );
@@ -106,42 +121,47 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
 
 const Mainpage: React.FC = () => {
   const [products, setProducts] = useState<IProduct[] | null>(null);
-  const [status, setStatus] = useState(Status.All);
+  const [status, setStatus] = useState(Status.New);
   const { clearToken } = useAuthState();
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [loading, setLoading] = useState(false);
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   useEffect(() => {
     handleGetProducts();
+    const interval = setInterval(() => {
+      handleGetProducts();
+    }, 10000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const handleGetProducts = async () => {
     try {
+      setLoading(true);
       const result = await axiosPrivate.get('products');
       setProducts(result.data);
+      setLoading(false);
     } catch (e) {
       console.log('error get products');
     }
   };
 
   const filteredProducts = (products: IProduct[], status: string) => {
-    const isFilledProducts = products.filter(
-      (product) => product.isFilled === true,
-    );
-    if (status === Status.All) {
-      return isFilledProducts;
-    } else {
-      return isFilledProducts.filter((product) => product.status === status);
-    }
+    return products.filter((product) => product.status === status);
   };
 
   return (
     <div className="w-full h-full dark:bg-gray-600">
+      {loading && (
+        <Spinner className="absolute flex w-full items-center justify-center" />
+      )}
       <div className="container dark:bg-gray-600">
-        <div className="w-[80%] m-auto   pb-[100px]">
+        <div className="w-[80%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
-              All products
+              Products
             </h1>
             <div
               className=""
@@ -210,24 +230,29 @@ const Mainpage: React.FC = () => {
             </Table.Head>
             <Table.Body className="w-full divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100 ">
               {products &&
-                filteredProducts(products, status).map((product: IProduct) => (
-                  <ProductsTable
-                    product={product}
-                    key={product._id}
-                    handleGetProducts={handleGetProducts}
-                  />
-                ))}
+                filteredProducts(products, status)
+                  .reverse()
+                  .map((product: IProduct) => (
+                    <ProductsTable
+                      product={product}
+                      key={product._id}
+                      handleGetProducts={handleGetProducts}
+                    />
+                  ))}
             </Table.Body>
           </Table>
           <div className="absolute flex right-10 top-5 gap-3">
             <DarkThemeToggle />
             <Button
-              className="text-gray-400 dark:text-red-400"
+              className="dark:text-white-400"
               onClick={() => navigate('logs')}
             >
               Logs
             </Button>
-            <Button className="text-gray-400" onClick={() => clearToken()}>
+            <Button
+              className="dark:text-white-400"
+              onClick={() => clearToken()}
+            >
               Logout
             </Button>
           </div>
