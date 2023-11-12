@@ -48,10 +48,8 @@ const Auth = () => {
     };
 
     login(userData).then((result) => {
-      console.log(result);
       setIsLoading(false);
       if (!result) return;
-      console.log(result?.data.token);
       setToken(result?.data.token);
     });
   };

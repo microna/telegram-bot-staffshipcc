@@ -166,7 +166,6 @@ module.exports = (app, bot, logger) => {
     try {
       const { data } = callbackQuery;
       const [productId, action] = data.split(':');
-      console.log(action);
       const changeProductStatus = async ({ id, status, message }) => {
         const result = await updateProduct({ status, id });
         if (status !== Status.Archive) {
