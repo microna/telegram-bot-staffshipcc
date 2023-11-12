@@ -158,7 +158,7 @@ const Mainpage: React.FC = () => {
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
       <div className="container dark:bg-gray-600">
-        <div className="w-[80%] m-auto pb-[100px]">
+        <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
               Products
