@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { HiPencilAlt } from 'react-icons/hi';
 import { IProduct, Status } from '../mainpage';
 import { axiosPrivate } from 'api/axios';
+import classNames from 'classnames';
 
 interface TableProductsPageProps {
   product: IProduct;
@@ -16,8 +17,6 @@ interface IStatusChange {
   status: string;
   message?: string;
 }
-
-interface IDeleteProduct extends Partial<IStatusChange> {}
 
 const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   try {
@@ -32,15 +31,6 @@ const changeProductStatus = async ({ id, status, message }: IStatusChange) => {
   }
 };
 
-const deleteProductFromArchive = async ({ id }: IDeleteProduct) => {
-  try {
-    const result = await axiosPrivate.delete(`deleteProduct/${id}`);
-    return result;
-  } catch (e) {
-    console.log('error delete');
-  }
-};
-
 const EditProductModal: FC<TableProductsPageProps> = function ({
   product,
   handleGetProducts,
@@ -49,89 +39,54 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   const modalSize = '7xl';
   const [status, setStatus] = useState(product.status);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
-  const [deleteProduct, setDeleteProduct] = useState(false);
   const [productDetails, setProductDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const handleChangeProductStatus = async () => {
+    setLoading(true);
     const result = await changeProductStatus({
       id: product._id,
       status,
       message: productDetails,
     });
     if (result) {
+      setLoading(false);
       setOpen(false);
       setProductDetails('');
-      setDeleteProduct(false);
       await handleGetProducts();
     }
   };
 
-  const handleDeleteProduct = async () => {
-    setLoading(true);
-    const result = await deleteProductFromArchive({ id: product._id });
-    if (!result) return;
-    setLoading(false);
-    setDeleteProduct(false);
-    await handleGetProducts();
-  };
-
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setProductDetails(event.target.value);
+  };
+
+  const changeIsReadedStatus = async (id: string) => {
+    if (!product.isReaded) {
+      setLoading(true);
+      const result = await axiosPrivate.patch('product/' + id);
+      if (!result) {
+        alert('error change product is readed');
+      } else {
+        setLoading(false);
+        await handleGetProducts();
+      }
+    }
   };
   return (
     <>
       {loading && (
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
-      {status !== Status.Archive && (
-        <Button color="primary" onClick={() => setOpen(!isOpen)}>
-          <HiPencilAlt className="mr-2 text-lg" />
-          Edit
-        </Button>
-      )}
-      {status === Status.Archive && (
-        <Button
-          className="ml-2"
-          color="primary"
-          onClick={() => setDeleteProduct(!deleteProduct)}
-        >
-          <HiPencilAlt className="mr-2 text-lg" />
-          Delete
-        </Button>
-      )}
-      <Modal
-        className="bg-gray-900 "
-        onClose={() => setDeleteProduct(false)}
-        show={deleteProduct}
+      <Button
+        color="primary"
+        onClick={() => {
+          changeIsReadedStatus(product._id);
+          setOpen(!isOpen);
+        }}
       >
-        {' '}
-        <Modal.Header className=" border-b border-gray-200  !p-6 dark:border-gray-700">
-          Вы уверены что хотите НАВСЕГДА удалить?
-        </Modal.Header>
-        <Modal.Footer className="justify-center">
-          {loading ? (
-            <Spinner />
-          ) : (
-            <>
-              {' '}
-              <Button
-                className="w-[200px] bg-blue-400 text-lg m-[10px]"
-                color="primary"
-                onClick={handleDeleteProduct}
-              >
-                Да!!!
-              </Button>
-              <Button
-                className="w-[200px] bg-blue-400 text-lg m-[10px]"
-                color="primary"
-                onClick={() => setDeleteProduct(false)}
-              >
-                Нет
-              </Button>
-            </>
-          )}
-        </Modal.Footer>
-      </Modal>
+        <HiPencilAlt className="mr-2 text-lg" />
+        Edit
+      </Button>
       <Modal
         size={modalSize}
         className="bg-gray-900 "
@@ -235,14 +190,6 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           Info: <br />
           {product.info}
         </Label>
-        {/* <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
-        
-        
-        </Label>
-        <Label className="mt-3 ml-6 whitespace-pre-line box-border break-words ">
-      
-     
-        </Label> */}
 
         <form className="bg-gray-60 dark:bg-gray-700">
           <div className=" w-full grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -281,7 +228,12 @@ export const ProductsTable: FC<TableProductsPageProps> = function ({
   return (
     <Table.Row
       key={product._id}
-      className="w-full hover:bg-gray-100 dark:hover:bg-neutral-300"
+      className={classNames(
+        'w-full hover:bg-gray-100 dark:hover:bg-neutral-300 hover:bg-gray-300',
+        {
+          'bg-green-400': !product.isReaded,
+        },
+      )}
     >
       <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         {product.updatedAt}
@@ -314,7 +266,6 @@ export const ProductsTable: FC<TableProductsPageProps> = function ({
             product={product}
             handleGetProducts={handleGetProducts}
           />
-          {/* <DeleteProductModal product={product} /> */}
         </div>
       </Table.Cell>
     </Table.Row>

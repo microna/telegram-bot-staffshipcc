@@ -13,7 +13,7 @@ const {
   getAllProducts,
   updateProduct,
   getProductById,
-  deleteProduct,
+  productReadedStatus,
 } = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 const { dateForErrorLog } = require('./src/utils/formatDate');
@@ -94,12 +94,19 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
   }
 });
 
-app.delete('/deleteProduct/:id', checkAuth, async (req) => {
-  const result = await deleteProduct({ id: req.params.id });
-  if (result) {
-    return { isSuccess: true };
-  } else {
-    return { isSuccess: false };
+app.patch('/product/:id', checkAuth, async (req, res) => {
+  try {
+    const result = await productReadedStatus({ id: req.params.id });
+    if (result) {
+      res.status(201).json({ isSuccess: true });
+    } else {
+      res.status(404).json({ isSuccess: false });
+    }
+  } catch (err) {
+    res.status(500).json({
+      message: 'failed get logs',
+      err,
+    });
   }
 });
 
