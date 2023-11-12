@@ -19,7 +19,6 @@ module.exports = (app, bot, logger) => {
       const { chat } = msg;
 
       const exitButton = 'Вийти з додавання';
-      console.log(states);
       if (msg.text === exitButton) {
         delete states[msg.from.id];
         delete states[msg.from.id + `id`];
@@ -110,10 +109,6 @@ https://minfin.com.ua/currency/converter/?from=eur&to=usd&val1=&val2=
           );
           return;
         }
-        // if (!containsOnlyNumbers(msg.text)) {
-        //   bot.sendMessage(msg.from.id, 'Введите число');
-        //   return;
-        // }
         const result = await updateProductTotalAmount({
           _id: states[msg.from.id + `id`],
           totalAmount: msg.text,
@@ -174,7 +169,6 @@ https://teletype.in/@usetname9472/rules123`,
             .then(() => {
               delete states[msg.from.id];
               delete states[msg.from.id + `id`];
-              // states[msg.chat.id] = 0;
             });
         } else {
           logger.error(

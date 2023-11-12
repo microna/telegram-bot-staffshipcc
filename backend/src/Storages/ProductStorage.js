@@ -131,7 +131,7 @@ const userProductsByUserTGId = ({ userTGId }) => {
     const products = ProductModel.find({ userTGId });
     return products;
   } catch (error) {
-    console.log('userProductsByUserTGId');
+    console.log('error userProductsByUserTGId');
   }
 };
 
