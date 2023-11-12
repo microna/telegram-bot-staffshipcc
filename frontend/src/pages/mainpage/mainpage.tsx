@@ -61,7 +61,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
 
   return (
     <div
-      className="absolute z-10 bg-gray-100 py-1"
+      className="absolute z-10 bg-gray-100 py-1 w-[16%]"
       role="none"
       ref={dropdownRef}
     >
@@ -242,12 +242,15 @@ const Mainpage: React.FC = () => {
           <div className="absolute flex right-10 top-5 gap-3">
             <DarkThemeToggle />
             <Button
-              className="text-gray-400 dark:text-red-400"
+              className="dark:text-white-400"
               onClick={() => navigate('logs')}
             >
               Logs
             </Button>
-            <Button className="text-gray-400" onClick={() => clearToken()}>
+            <Button
+              className="dark:text-white-400"
+              onClick={() => clearToken()}
+            >
               Logout
             </Button>
           </div>

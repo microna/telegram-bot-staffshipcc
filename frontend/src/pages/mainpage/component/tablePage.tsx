@@ -46,6 +46,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
   handleGetProducts,
 }) {
   const [isOpen, setOpen] = useState(false);
+  const modalSize = '7xl';
   const [status, setStatus] = useState(product.status);
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const [deleteProduct, setDeleteProduct] = useState(false);
@@ -132,31 +133,33 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
         </Modal.Footer>
       </Modal>
       <Modal
-        className="bg-gray-900"
+        size={modalSize}
+        className="bg-gray-900 "
         onClose={() => setOpen(false)}
         show={isOpen}
       >
         <Modal.Header className="bg-gray-900 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
-            <span className="mx-5"> Edit product.</span> User:{' '}
-            <span className="text-gray-400 text-gray-900">
+            <span className="mx-5 text-white"> Edit product.</span>{' '}
+            <span className="mx-5 text-white">User:</span>{' '}
+            <span className="text-white">
               {' '}
               <a
-                className="text-blue-900"
+                className="text-blue-400 underline"
                 href={`https://t.me/${product.userTGNick}`}
                 target="_blank"
               >
                 {product.userTGNick}
               </a>
             </span>
-            <span className="ml-5">Status: </span>
-            <span className="text-gray-400">{product.status}</span>
+            <span className="ml-5 text-white">Status: </span>
+            <span className="text-blue-400">{product.status}</span>
           </strong>
         </Modal.Header>
         <div className="relative">
           <div className="flex gap-5 items-center mt-2">
             <Button
-              className="w-[150px] ml-7 bg-blue-100 text-lg"
+              className="w-[150px] ml-5 bg-blue-100 text-lg"
               color="primary"
               onClick={() => setIsOpenDropDown(!isOpenDropDown)}
             >
@@ -166,14 +169,17 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           </div>
           {isOpenDropDown && (
             <div
-              className="w-[10%] absolute left-[30px] bg-gray-100 py-1"
+              className="w-[23%] absolute left-[22px] bg-gray-100  py-1"
               role="none"
             >
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-0"
-                onClick={() => setStatus(Status.New)}
+                onClick={() => {
+                  setStatus(Status.New);
+                  setIsOpenDropDown(false);
+                }}
               >
                 New
               </button>
@@ -181,7 +187,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-0"
-                onClick={() => setStatus(Status.ToEdit)}
+                onClick={() => {
+                  setStatus(Status.ToEdit);
+                  setIsOpenDropDown(false);
+                }}
               >
                 To edit
               </button>
@@ -189,7 +198,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-1"
-                onClick={() => setStatus(Status.Reject)}
+                onClick={() => {
+                  setStatus(Status.Reject);
+                  setIsOpenDropDown(false);
+                }}
               >
                 Reject
               </button>
@@ -197,7 +209,10 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 className="text-gray-700 block px-4 py-2 text-sm"
                 role="menuitem"
                 id="menu-item-2"
-                onClick={() => setStatus(Status.OnReview)}
+                onClick={() => {
+                  setStatus(Status.OnReview);
+                  setIsOpenDropDown(false);
+                }}
               >
                 On rewiev
               </button>
@@ -216,7 +231,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           trackNumber: <br />
           {product.trackNumber}
         </Label>
-        <Label className="mt-3 ml-6 whitespace-pre-line">
+        <Label className="mt-3 ml-6 whitespace-pre-line ">
           totalAmount: <br />
           {product.totalAmount}
         </Label>
@@ -229,7 +244,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
           (
           <form>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <div className="lg:col-span-2 p-5">
+              <div className="lg:col-span-2">
                 <Label htmlFor="productDetails">Write answer</Label>
                 <Textarea
                   id="productDetails"
