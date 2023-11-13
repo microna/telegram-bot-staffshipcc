@@ -1,4 +1,4 @@
-const UserModel = require('../Modules/User.model.js');
+const UserModel = require('../Models/User.model.js');
 
 const saveUser = async ({ userId, isBot, firstName, lastName, userName, languageCode }) => {
   try {
@@ -16,7 +16,5 @@ const saveUser = async ({ userId, isBot, firstName, lastName, userName, language
     console.log(error);
   }
 };
-
-// const updateProduct = () => {};
 
 module.exports = { saveUser };

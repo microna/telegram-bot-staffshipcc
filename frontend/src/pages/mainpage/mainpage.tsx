@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 export interface IProduct {
   _id: string;
+  isReaded: boolean;
   trackNumber: string;
   totalAmount: string;
   userTGNick: string;
@@ -148,7 +149,7 @@ const Mainpage: React.FC = () => {
     }
   };
 
-  const filteredProducts = (products: IProduct[], status: string) => {
+  const filteredProductsByStatus = (products: IProduct[], status: string) => {
     return products.filter((product) => product.status === status);
   };
 
@@ -158,7 +159,7 @@ const Mainpage: React.FC = () => {
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
       <div className="container dark:bg-gray-600">
-        <div className="w-[80%] m-auto pb-[100px]">
+        <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
               Products
@@ -230,7 +231,7 @@ const Mainpage: React.FC = () => {
             </Table.Head>
             <Table.Body className="w-full divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100 ">
               {products &&
-                filteredProducts(products, status)
+                filteredProductsByStatus(products, status)
                   .reverse()
                   .map((product: IProduct) => (
                     <ProductsTable

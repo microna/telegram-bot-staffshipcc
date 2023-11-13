@@ -1,5 +1,5 @@
 const { Status } = require('../Components/Status.js');
-const ProductModel = require('../Modules/Product.model.js');
+const ProductModel = require('../Models/Product.model.js');
 const { formatDate } = require('../utils/formatDate.js');
 
 const saveProduct = async ({
@@ -126,17 +126,22 @@ const getAllProducts = async () => {
   }
 };
 
-const userProductsByUserTGId = ({ userTGId }) => {
+const userProductsByUserTGId = async ({ userTGId }) => {
   try {
-    const products = ProductModel.find({ userTGId });
+    const products = await ProductModel.find({ userTGId });
     return products;
   } catch (error) {
     console.log('error userProductsByUserTGId');
   }
 };
 
-const deleteProduct = ({ id }) => {
-  return ProductModel.findByIdAndRemove({ _id: id });
+const productReadedStatus = async ({ id }) => {
+  return await ProductModel.findByIdAndUpdate(
+    { _id: id },
+    {
+      isReaded: true,
+    },
+  );
 };
 
 module.exports = {
@@ -149,5 +154,5 @@ module.exports = {
   getAllProducts,
   updateProduct,
   userProductsByUserTGId,
-  deleteProduct,
+  productReadedStatus,
 };

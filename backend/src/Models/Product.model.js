@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
   {
+    isReaded: {
+      type: Boolean,
+      default: false,
+    },
     trackNumber: {
       type: String,
       required: true,
