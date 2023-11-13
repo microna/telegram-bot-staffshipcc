@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 export interface IProduct {
   _id: string;
+  isReaded: boolean;
   trackNumber: string;
   totalAmount: string;
   userTGNick: string;
@@ -148,7 +149,7 @@ const Mainpage: React.FC = () => {
     }
   };
 
-  const filteredProducts = (products: IProduct[], status: string) => {
+  const filteredProductsByStatus = (products: IProduct[], status: string) => {
     return products.filter((product) => product.status === status);
   };
 
@@ -230,7 +231,7 @@ const Mainpage: React.FC = () => {
             </Table.Head>
             <Table.Body className="w-full divide-y divide-gray-200 bg-white dark:divide-gray-700 bg-gray-100 ">
               {products &&
-                filteredProducts(products, status)
+                filteredProductsByStatus(products, status)
                   .reverse()
                   .map((product: IProduct) => (
                     <ProductsTable
