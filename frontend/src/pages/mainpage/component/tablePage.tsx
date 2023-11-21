@@ -7,6 +7,7 @@ import { HiPencilAlt } from 'react-icons/hi';
 import { IProduct, Status } from '../mainpage';
 import { axiosPrivate } from 'api/axios';
 import classNames from 'classnames';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface TableProductsPageProps {
   product: IProduct;
@@ -95,8 +96,13 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
       >
         <Modal.Header className="bg-gray-60 border-b border-gray-200 !p-6 dark:border-gray-700">
           <strong>
-            <span className="mx-5 text-blue-900"> Edit product.</span>{' '}
-            <span className="mx-5 text-blue-900">User:</span>{' '}
+            <span className="mx-5 text-blue-900 dark:text-gray-100">
+              {' '}
+              Edit product.
+            </span>{' '}
+            <span className="mx-5 text-blue-900 dark:text-gray-100">
+              User:
+            </span>{' '}
             <span className="text-white">
               {' '}
               <a
@@ -107,7 +113,9 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 {product.userTGNick}
               </a>
             </span>
-            <span className="ml-5 text-blue-900">Status: </span>
+            <span className="ml-5 text-blue-900 dark:text-gray-100">
+              Status:{' '}
+            </span>
             <span className="text-blue-400">{product.status}</span>
           </strong>
         </Modal.Header>
@@ -225,6 +233,21 @@ export const ProductsTable: FC<TableProductsPageProps> = function ({
   product,
   handleGetProducts,
 }) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const trackNumber = product.trackNumber;
+
+    // Copy the trackNumber to clipboard
+    navigator.clipboard
+      .writeText(trackNumber)
+      .then(() => {
+        toast.success(`Copied track number: ${trackNumber}`);
+      })
+      .catch((error) => {
+        console.error('Unable to copy track number', error);
+        toast.error('Failed to copy track number');
+      });
+  };
   return (
     <Table.Row
       key={product._id}
@@ -238,14 +261,14 @@ export const ProductsTable: FC<TableProductsPageProps> = function ({
       <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         {product.updatedAt}
       </Table.Cell>
-      <Table.Cell className="truncate overflow-hidden max-w-[200px] font-medium whitespace-nowrap p-4">
-        {product.info}
-      </Table.Cell>
+
       <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black w-[120px]">
         {product.status}
       </Table.Cell>
       <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
-        {product.trackNumber}
+        <a className="cursor-pointer" onClick={handleClick}>
+          {product.trackNumber}
+        </a>
       </Table.Cell>
       <Table.Cell className="truncate overflow-hidden max-w-[200px] whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-black ">
         <a
