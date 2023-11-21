@@ -211,10 +211,6 @@ const Mainpage: React.FC = () => {
               </Table.HeadCell>
 
               <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
-                Product Info
-              </Table.HeadCell>
-
-              <Table.HeadCell className="group-first/head:first:rounded-tl-lg group-first/head:last:rounded-tr-lg bg-gray-50 p-4 ">
                 Status
               </Table.HeadCell>
 
