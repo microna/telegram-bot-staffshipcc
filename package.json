@@ -12,5 +12,8 @@
       "install:frontend": "cd frontend && yarn",
       "build:frontend": "cd frontend && yarn build && cp -r build/* ../backend/public/",
       "start": "./start.sh"
+   },
+   "dependencies": {
+      "react-toastify": "^9.1.3"
    }
 }
