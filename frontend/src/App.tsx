@@ -9,6 +9,8 @@ import { Private } from 'auth-state/route-wrappers/private';
 import LogsPage from 'pages/logs/logspage';
 import { Flowbite } from 'flowbite-react';
 import { FlowbiteThemeProvider } from 'layouts/FlowbiteThemeProvider/FlowbiteThemeProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             </Routes>
           </AuthStateProvider>
         </FlowbiteThemeProvider>
+        <ToastContainer />
       </Flowbite>
     </BrowserRouter>
   );
