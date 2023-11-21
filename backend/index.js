@@ -21,8 +21,8 @@ const { dateForErrorLog } = require('./src/utils/formatDate');
 mongoose
   .connect(process.env.DB_URL)
   .then(() => {
-    logger.info(`${dateForErrorLog()} -- Connected to MongoDB 🔥`);
-    console.log('Connected to MongoDB 🔥');
+    logger.info(`${dateForErrorLog()} -- Connected to MongoDB`);
+    console.log('Connected to MongoDB');
   })
   .catch((err) => {
     logger.error(`${dateForErrorLog()} -- Erorr connection to MongoDB`);
