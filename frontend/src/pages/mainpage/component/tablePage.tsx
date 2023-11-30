@@ -144,7 +144,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                   setIsOpenDropDown(false);
                 }}
               >
-                New
+                🔵 Новая посылка
               </button>
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
@@ -155,7 +155,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                   setIsOpenDropDown(false);
                 }}
               >
-                To edit
+                🟡 Посылка на доработке
               </button>
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
@@ -166,7 +166,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                   setIsOpenDropDown(false);
                 }}
               >
-                Reject
+                🔴 Отказ
               </button>
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
@@ -177,7 +177,7 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                   setIsOpenDropDown(false);
                 }}
               >
-                On rewiev
+                🟢 Посылка в работе
               </button>
               <button
                 className="text-gray-700 block px-4 py-2 text-sm"
@@ -185,18 +185,21 @@ const EditProductModal: FC<TableProductsPageProps> = function ({
                 id="menu-item-2"
                 onClick={() => setStatus(Status.Archive)}
               >
-                Archive
+                🗂 Архив
               </button>
             </div>
           )}
         </div>
         <Label className="mt-3 ml-6 whitespace-pre-line break-words pr-3">
-          trackNumber: <br />
+          Номер посилки: <br />
           {product.trackNumber}
-          totalAmount: <br />
+          <br />
+          Обшаяя сумма: <br />
           {product.totalAmount}
-          Info: <br />
+          <br />
+          Иформация о посилке: <br />
           {product.info}
+          <br />
         </Label>
 
         <form className="bg-gray-60 dark:bg-gray-700">

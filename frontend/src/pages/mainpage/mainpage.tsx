@@ -21,11 +21,11 @@ export interface IProduct {
 }
 
 export enum Status {
-  ToEdit = 'To edit',
-  Reject = 'Reject',
-  OnReview = 'On review',
-  New = 'New',
-  Archive = 'Archive',
+  New = '🔵 Новая посылка',
+  OnReview = '🟢 Посылка в работе',
+  ToEdit = '🟡 Посылка на доработке',
+  Reject = '🔴 Отказ',
+  Archive = '🗂 Архив',
 }
 
 interface IDropdownMenu {
@@ -74,7 +74,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        New
+        🔵 Новая посылка
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -84,7 +84,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        To edit
+        🟡 Посылка на доработке
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -94,7 +94,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        Reject
+        🔴 Отказ
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -104,7 +104,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        On review
+        🟢 Посылка в работе
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -114,7 +114,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        Archive
+        🗂 Архив
       </button>
     </div>
   );
