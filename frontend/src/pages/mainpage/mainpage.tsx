@@ -4,8 +4,8 @@ import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
 import { Button, DarkThemeToggle, Spinner, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
-import { IoIosRefresh } from 'react-icons/io';
 import { toast } from 'react-toastify';
+import { IoIosRefresh } from 'react-icons/io';
 
 export interface IProduct {
   _id: string;
@@ -23,11 +23,11 @@ export interface IProduct {
 }
 
 export enum Status {
-  New = '🔵 Новая посылка',
-  OnReview = '🟢 Посылка в работе',
-  ToEdit = '🟡 Посылка на доработке',
-  Reject = '🔴 Отказ',
-  Archive = '🗂 Архив',
+  ToEdit = 'To edit',
+  Reject = 'Reject',
+  OnReview = 'On review',
+  New = 'New',
+  Archive = 'Archive',
 }
 
 interface IDropdownMenu {
@@ -134,7 +134,7 @@ const Mainpage: React.FC = () => {
     handleGetProducts();
     const interval = setInterval(() => {
       handleGetProducts();
-    }, 100000); //100sec
+    }, 100000);
     return () => {
       clearInterval(interval);
     };
@@ -160,7 +160,6 @@ const Mainpage: React.FC = () => {
       {loading && (
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
-
       <div className="container dark:bg-gray-600">
         <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
@@ -175,8 +174,8 @@ const Mainpage: React.FC = () => {
                 <IoIosRefresh />
               </div>
             </div>
-
             <div
+              className=""
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"

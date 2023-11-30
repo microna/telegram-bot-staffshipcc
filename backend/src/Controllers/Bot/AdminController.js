@@ -2,6 +2,7 @@ const { productButtons } = require('../../Components/Buttons');
 const { Status } = require('../../Components/Status');
 const { getProductsByStatus, updateProduct } = require('../../Storages/ProductStorage');
 const { changeProductText } = require('../../utils/changeProductText');
+const { convertStatusMsg } = require('../../utils/convertStatus');
 const { dateForErrorLog } = require('../../utils/formatDate');
 const { sendMessageToUser } = require('../../utils/sendMessageToUser');
 
@@ -168,6 +169,8 @@ module.exports = (app, bot, logger) => {
       const [productId, action] = data.split(':');
       const changeProductStatus = async ({ id, status, message }) => {
         const result = await updateProduct({ status, id });
+        const convertedStatus = convertStatusMsg(status);
+
         if (status !== Status.Archive) {
           await sendMessageToUser({
             bot,
@@ -178,17 +181,19 @@ module.exports = (app, bot, logger) => {
         }
         if (status === Status.Reject || status === Status.ToEdit) {
           // const id = await getProductById({ id });
+
           await sendMessageToUser({
             bot,
             userId: adminId,
-            message: `${id},${status}: Вы изминили статус на ${status}, для посылки ${id}  `,
+            message: `${id},${status}: Вы изминили статус на ${convertedStatus}, для посылки ${id}  `,
             options: {},
           });
         } else {
+          console.log('convertedStatus', convertedStatus, 'status', status);
           await sendMessageToUser({
             bot,
             userId: adminId,
-            message: `Продукт добавлен в статус: ${status}`,
+            message: `Продукт добавлен в статус: ${convertedStatus}`,
             options: {},
           });
         }
@@ -196,7 +201,11 @@ module.exports = (app, bot, logger) => {
 
       switch (action) {
         case Status.OnReview:
-          changeProductStatus({ id: productId, status: action, message: 'Заказ в работе: ' });
+          changeProductStatus({
+            id: productId,
+            status: action,
+            message: 'Заказ в работе: ',
+          });
           break;
         case Status.ToEdit:
           changeProductStatus({
