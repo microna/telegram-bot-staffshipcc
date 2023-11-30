@@ -4,8 +4,6 @@ import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
 import { Button, DarkThemeToggle, Spinner, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
-import { IoIosRefresh } from 'react-icons/io';
-import { toast } from 'react-toastify';
 
 export interface IProduct {
   _id: string;
@@ -23,11 +21,11 @@ export interface IProduct {
 }
 
 export enum Status {
-  New = '🔵 Новая посылка',
-  OnReview = '🟢 Посылка в работе',
-  ToEdit = '🟡 Посылка на доработке',
-  Reject = '🔴 Отказ',
-  Archive = '🗂 Архив',
+  ToEdit = 'To edit',
+  Reject = 'Reject',
+  OnReview = 'On review',
+  New = 'New',
+  Archive = 'Archive',
 }
 
 interface IDropdownMenu {
@@ -76,7 +74,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        🔵 Новая посылка
+        New
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -86,7 +84,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        🟡 Посылка на доработке
+        To edit
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -96,7 +94,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        🔴 Отказ
+        Reject
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -106,7 +104,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        🟢 Посылка в работе
+        On review
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -116,7 +114,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        🗂 Архив
+        Archive
       </button>
     </div>
   );
@@ -134,7 +132,7 @@ const Mainpage: React.FC = () => {
     handleGetProducts();
     const interval = setInterval(() => {
       handleGetProducts();
-    }, 100000); //100sec
+    }, 10000);
     return () => {
       clearInterval(interval);
     };
@@ -147,7 +145,7 @@ const Mainpage: React.FC = () => {
       setProducts(result.data);
       setLoading(false);
     } catch (e) {
-      toast.error('Failed get products');
+      console.log('error get products');
     }
   };
 
@@ -160,23 +158,14 @@ const Mainpage: React.FC = () => {
       {loading && (
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
-
       <div className="container dark:bg-gray-600">
         <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
-            <div className="flex w-full justify-between mt-[110px]">
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl ">
-                Products
-              </h1>
-              <div
-                className="pr-5 pt-2 cursor-pointer text-green-400"
-                onClick={() => handleGetProducts()}
-              >
-                <IoIosRefresh />
-              </div>
-            </div>
-
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
+              Products
+            </h1>
             <div
+              className=""
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
