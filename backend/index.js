@@ -18,6 +18,7 @@ const {
 } = require('./src/Storages/ProductStorage');
 const { sendMessageToUser } = require('./src/utils/sendMessageToUser');
 const { dateForErrorLog } = require('./src/utils/formatDate');
+const { convertStatusMsg } = require('./src/utils/convertStatus');
 
 mongoose
   .connect(process.env.DB_URL)
@@ -71,7 +72,7 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
     const { id, status, message } = req.body;
     const result = await updateProduct({ id, status, message });
     const product = await getProductById({ id });
-    const textAnswer = `Трек-номер: ${product.trackNumber} \nОбщая стоимость: ${product.totalAmount} \nСтатус: ${product.status} \n💬Комментарий администратора: \n${product.comments}`;
+    const textAnswer = `Трек-номер: ${product.trackNumber} \nОбщая стоимость: ${product.totalAmount} \nСтатус: ${convertStatusMsg(product.status)} \n💬Комментарий администратора: \n${product.comments}`;
     if (result) {
       await sendMessageToUser({
         bot,
