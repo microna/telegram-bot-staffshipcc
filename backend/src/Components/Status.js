@@ -1,9 +1,9 @@
 const Status = {
-  New: 'New',
-  OnReview: 'On review',
-  ToEdit: 'To edit',
-  Reject: 'Reject',
-  Archive: 'Archive',
+  New: '🔵 Новая посылка',
+  OnReview: '🟢 Посылка в работе',
+  ToEdit: '🟡 Посылка на доработке',
+  Reject: '🔴 Отказ',
+  Archive: '🗂 Архив',
 };
 
 module.exports = { Status };
