@@ -144,6 +144,10 @@ const productReadedStatus = async ({ id }) => {
   );
 };
 
+const deleteProduct = ({ id }) => {
+  return ProductModel.findByIdAndRemove({ _id: id });
+};
+
 module.exports = {
   saveProduct,
   updateProductStatus,
@@ -155,4 +159,5 @@ module.exports = {
   updateProduct,
   userProductsByUserTGId,
   productReadedStatus,
+  deleteProduct
 };
