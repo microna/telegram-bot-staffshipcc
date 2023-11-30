@@ -4,6 +4,8 @@ import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
 import { Button, DarkThemeToggle, Spinner, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { IoIosRefresh } from 'react-icons/io';
 
 export interface IProduct {
   _id: string;
@@ -74,7 +76,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        New
+        🔵 Новая посылка
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -84,7 +86,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        To edit
+        🟡 Посылка на доработке
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -94,7 +96,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        Reject
+        🔴 Отказ
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -104,7 +106,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        On review
+        🟢 Посылка в работе
       </button>
       <button
         className="text-gray-700 block px-4 py-2 text-sm"
@@ -114,7 +116,7 @@ const DropdownMenu: React.FC<IDropdownMenu> = ({
           setIsOpenDropDown(false);
         }}
       >
-        Archive
+        🗂 Архив
       </button>
     </div>
   );
@@ -132,7 +134,7 @@ const Mainpage: React.FC = () => {
     handleGetProducts();
     const interval = setInterval(() => {
       handleGetProducts();
-    }, 10000);
+    }, 100000);
     return () => {
       clearInterval(interval);
     };
@@ -145,7 +147,7 @@ const Mainpage: React.FC = () => {
       setProducts(result.data);
       setLoading(false);
     } catch (e) {
-      console.log('error get products');
+      toast.error('Failed get products');
     }
   };
 
@@ -161,9 +163,17 @@ const Mainpage: React.FC = () => {
       <div className="container dark:bg-gray-600">
         <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
-              Products
-            </h1>
+            <div className="flex w-full justify-between mt-[110px]">
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl ">
+                Products
+              </h1>
+              <div
+                className="pr-5 pt-2 cursor-pointer text-green-400"
+                onClick={() => handleGetProducts()}
+              >
+                <IoIosRefresh />
+              </div>
+            </div>
             <div
               className=""
               role="menu"
