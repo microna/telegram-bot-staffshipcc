@@ -4,6 +4,8 @@ import { axiosPrivate } from 'api/axios';
 import { ProductsTable } from 'pages/mainpage/component/tablePage';
 import { Button, DarkThemeToggle, Spinner, Table } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
+import { IoIosRefresh } from 'react-icons/io';
+import { toast } from 'react-toastify';
 
 export interface IProduct {
   _id: string;
@@ -132,7 +134,7 @@ const Mainpage: React.FC = () => {
     handleGetProducts();
     const interval = setInterval(() => {
       handleGetProducts();
-    }, 10000);
+    }, 100000); //100sec
     return () => {
       clearInterval(interval);
     };
@@ -145,7 +147,7 @@ const Mainpage: React.FC = () => {
       setProducts(result.data);
       setLoading(false);
     } catch (e) {
-      console.log('error get products');
+      toast.error('Failed get products');
     }
   };
 
@@ -158,14 +160,23 @@ const Mainpage: React.FC = () => {
       {loading && (
         <Spinner className="absolute flex w-full items-center justify-center" />
       )}
+
       <div className="container dark:bg-gray-600">
         <div className="w-[100%] m-auto pb-[100px]">
           <div className="mb-4  flex w-full justify-between  ">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl mt-[100px]">
-              Products
-            </h1>
+            <div className="flex w-full justify-between mt-[110px]">
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl ">
+                Products
+              </h1>
+              <div
+                className="pr-5 pt-2 cursor-pointer text-green-400"
+                onClick={() => handleGetProducts()}
+              >
+                <IoIosRefresh />
+              </div>
+            </div>
+
             <div
-              className=""
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"

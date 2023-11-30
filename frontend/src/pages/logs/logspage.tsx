@@ -2,17 +2,18 @@ import { axiosPrivate } from 'api/axios';
 import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface ILog {
   level?: string;
   message: string;
 }
-const changeProductStatus = async () => {
+const getLogs = async () => {
   try {
     const result = await axiosPrivate.get('logs');
     return result?.data;
   } catch (e) {
-    console.log('error login');
+    toast.error('Failed get logs');
   }
 };
 const LogsPage = () => {
@@ -21,7 +22,7 @@ const LogsPage = () => {
   const navigate = useNavigate();
 
   const updateLogs = async () => {
-    const result = await changeProductStatus();
+    const result = await getLogs();
     if (result) {
       setLogs(result);
     }
