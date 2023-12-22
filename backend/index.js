@@ -45,7 +45,7 @@ const logger = winston.createLogger({
 
 app.use(
   cors({
-    origin: [process.env.ENVIRONMENT_FRONTEND_DOMAIN, 'http://localhost:3000'],
+    origin: [process.env.ENVIRONMENT_FRONTEND_DOMAIN, 'http://localhost:3000', 'https://6585da0838826a009a2699fa--shiny-quokka-a617b5.netlify.app'],
   }),
 );
 app.use(express.json());

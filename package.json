@@ -11,6 +11,7 @@
     "install:backend": "cd backend && yarn",
     "install:frontend": "cd frontend && yarn",
     "build:frontend": "cd frontend && yarn build && cp -r build/* ../backend/public/",
-    "start": "./start.sh"
+    "start": "./start.sh",
+    "build": "cd backend && yarn"
   }
 }
