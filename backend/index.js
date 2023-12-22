@@ -44,9 +44,7 @@ const logger = winston.createLogger({
 });
 
 app.use(
-  cors({
-    origin: [process.env.ENVIRONMENT_FRONTEND_DOMAIN, 'http://localhost:3000'],
-  }),
+  cors(),
 );
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
@@ -146,6 +144,12 @@ app.get('/logs', checkAuth, function (req, res) {
 });
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/', function (req, res) {
+  res.json({
+    hello: 'world',
+  });
 });
 
 const host = '0.0.0.0';
