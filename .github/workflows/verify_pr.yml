@@ -24,18 +24,6 @@ jobs:
       - name: Lint Backend
         run: cd backend && yarn lint
 
-      - name: Install Frontend Dependencies
-        run: cd frontend && yarn install
-
-      - name: Lint Frontend
-        run: cd frontend && yarn lint
-
-      - name: Build Frontend
-        run: cd frontend && yarn build
-
-      - name: Copy Build to Backend Public Folder
-        run: cp -r frontend/build/* backend/public/
-
   pr_verified:
     name: Pull request verified
     needs: [lint_and_test]

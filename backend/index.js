@@ -43,11 +43,7 @@ const logger = winston.createLogger({
   transports: [new winston.transports.File({ filename: 'combined.log' })],
 });
 
-app.use(
-  cors({
-    origin: [process.env.ENVIRONMENT_FRONTEND_DOMAIN, 'http://localhost:3000', 'https://6585da0838826a009a2699fa--shiny-quokka-a617b5.netlify.app'],
-  }),
-);
+app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 const bot = new TelegramBot(token, { polling: true, autoStart: true });
@@ -72,7 +68,11 @@ app.patch('/changeProductStatus', checkAuth, async (req, res) => {
     const { id, status, message } = req.body;
     const result = await updateProduct({ id, status, message });
     const product = await getProductById({ id });
-    const textAnswer = `Трек-номер: ${product.trackNumber} \nОбщая стоимость: ${product.totalAmount} \nСтатус: ${convertStatusMsg(product.status)} \n💬Комментарий администратора: \n${product.comments}`;
+    const textAnswer = `Трек-номер: ${product.trackNumber} \nОбщая стоимость: ${
+      product.totalAmount
+    } \nСтатус: ${convertStatusMsg(product.status)} \n💬Комментарий администратора: \n${
+      product.comments
+    }`;
     if (result) {
       await sendMessageToUser({
         bot,
@@ -146,6 +146,12 @@ app.get('/logs', checkAuth, function (req, res) {
 });
 app.get('*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/', function (req, res) {
+  res.json({
+    hello: 'world',
+  });
 });
 
 const host = '0.0.0.0';
